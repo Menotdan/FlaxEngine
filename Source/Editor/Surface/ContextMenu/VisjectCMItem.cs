@@ -102,15 +102,57 @@ namespace FlaxEditor.Surface.ContextMenu
         {
             if (startBox == null)
                 return false;
-            if (!startBox.IsOutput)
-                return false; // For now, I'm only handing the output box case
+            if (nodeArchetype.Elements == null)
+                return false;
 
-            if (nodeArchetype.Elements != null)
+            if (startBox.IsOutput)
             {
                 for (int i = 0; i < nodeArchetype.Elements.Length; i++)
                 {
                     if (nodeArchetype.Elements[i].Type == NodeElementType.Input &&
                         startBox.CanUseType(nodeArchetype.Elements[i].ConnectionsType))
+                    {
+                        return true;
+                    }
+                }
+            } else
+            {
+                for (int i = 0; i < nodeArchetype.Elements.Length; i++)
+                {
+                    if (nodeArchetype.Elements[i].Type == NodeElementType.Output &&
+                        startBox.CanUseType(nodeArchetype.Elements[i].ConnectionsType))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool HasMatchingTypeExactly(Box startBox, NodeArchetype nodeArchetype)
+        {
+            if (startBox == null)
+                return false;
+            if (nodeArchetype.Elements == null)
+                return false;
+
+            if (startBox.IsOutput)
+            {
+                for (int i = 0; i < nodeArchetype.Elements.Length; i++)
+                {
+                    if (nodeArchetype.Elements[i].Type == NodeElementType.Input &&
+                        startBox.Archetype.ConnectionsType == nodeArchetype.Elements[i].ConnectionsType)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < nodeArchetype.Elements.Length; i++)
+                {
+                    if (nodeArchetype.Elements[i].Type == NodeElementType.Output &&
+                        startBox.Archetype.ConnectionsType == nodeArchetype.Elements[i].ConnectionsType)
                     {
                         return true;
                     }
