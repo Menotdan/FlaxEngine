@@ -413,6 +413,18 @@ namespace FlaxEditor.Surface.ContextMenu
             };
         }
 
+        private void LayoutUpdate()
+        {
+            Profiler.BeginEvent("VisjectCM.LayoutUpdate");
+            if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
+                SelectedItem = _groups.Find(g => g.Visible)?.Children.Find(c => c.Visible && c is VisjectCMItem) as VisjectCMItem;
+            PerformLayout();
+            if (SelectedItem != null)
+                _panel1.ScrollViewTo(SelectedItem);
+            _searchBox.Focus();
+            Profiler.EndEvent();
+        }
+
         private void OnSearchFilterChanged()
         {
             // Skip events during setup or init stuff
@@ -437,16 +449,40 @@ namespace FlaxEditor.Surface.ContextMenu
             }
             SortGroups();
             UnlockChildrenRecursive();
+            UpdateConnectionLimits(true); // Hide blocks that cannot connect to the selected box.
+
+            LayoutUpdate();
+
+            Profiler.EndEvent();
+        }
+
+        /// <summary>
+        /// Call this when you need to update what can be shown at a context-based level.
+        /// </summary>
+        /// <param name="preserveHidden">Should we preserve previous hidden values.</param>
+        /// <param name="matchExactly">Should we limit compatibility to exact type matches.</param>
+        public void UpdateConnectionLimits(bool preserveHidden, bool matchExactly = true)
+        {
+            Profiler.BeginEvent("VisjectCM.UpdateConnectionLimits");
+            if (_selectedBox == null && (!preserveHidden || string.IsNullOrEmpty(_searchBox.Text)))
+            {
+                ResetView();
+                Profiler.EndEvent();
+                return;
+            }
+
+            // Update groups
+            LockChildrenRecursive();
+            for (int i = 0; i < _groups.Count; i++)
+            {
+                _groups[i].UpdateCompatibleItem(_selectedBox, preserveHidden, matchExactly);
+                _groups[i].UpdateItemSort(_selectedBox);
+            }
+            SortGroups();
+            UnlockChildrenRecursive();
 
             // If no item is selected (or it's not visible anymore), select the top one
-            Profiler.BeginEvent("VisjectCM.Layout");
-            if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
-                SelectedItem = _groups.Find(g => g.Visible)?.Children.Find(c => c.Visible && c is VisjectCMItem) as VisjectCMItem;
-            PerformLayout();
-            if (SelectedItem != null)
-                _panel1.ScrollViewTo(SelectedItem);
-            _searchBox.Focus();
-            Profiler.EndEvent();
+            LayoutUpdate();
 
             Profiler.EndEvent();
         }
