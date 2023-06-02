@@ -77,8 +77,14 @@ namespace FlaxEditor.Surface.ContextMenu
             if (!Visible)
                 return;
 
-            if (selectedBox != null && CanConnectTo(selectedBox, NodeArchetype))
-                SortScore += 1;
+            if (selectedBox != null)
+            {
+                if (CanConnectTo(selectedBox, NodeArchetype))
+                    SortScore += 1;
+                if (HasMatchingTypeExactly(selectedBox, NodeArchetype))
+                    SortScore += 6;
+            }
+
             if (Data != null)
                 SortScore += 1;
             if (_isStartsWithMatch)
