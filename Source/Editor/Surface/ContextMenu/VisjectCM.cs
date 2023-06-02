@@ -6,6 +6,7 @@ using System.Linq;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Input;
 using FlaxEditor.Scripting;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -419,7 +420,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 return;
 
             Profiler.BeginEvent("VisjectCM.OnSearchFilterChanged");
-            
+
             if (string.IsNullOrEmpty(_searchBox.Text))
             {
                 ResetView();

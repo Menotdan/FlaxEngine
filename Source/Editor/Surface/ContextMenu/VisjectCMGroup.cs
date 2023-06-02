@@ -129,6 +129,38 @@ namespace FlaxEditor.Surface.ContextMenu
         }
 
         /// <summary>
+        /// Updates the group's visibilty based on if any of it's children are able to be connected to compareBox.
+        /// </summary>
+        /// <param name="compareBox">The box to check if children can connect to.</param>
+        /// <param name="preserveHidden">Should we preserve previous hidden values.</param>
+        /// <param name="matchExactly">Should we limit compatibility to exact type matches.</param>
+        public void UpdateCompatibleItem(Box compareBox, bool preserveHidden, bool matchExactly)
+        {
+            Profiler.BeginEvent("VisjectCMGroup.UpdateCompatibleItem");
+
+            // Update items
+            bool isAnyVisible = false;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                if (_children[i] is VisjectCMItem item)
+                {
+                    item.UpdateCompatibleItem(compareBox, preserveHidden, matchExactly);
+                    isAnyVisible |= item.Visible;
+                }
+            }
+
+            if (isAnyVisible)
+            {
+                Visible = true;
+            } else
+            {
+                Visible = false;
+            }
+
+            Profiler.EndEvent();
+        }
+
+        /// <summary>
         /// Updates the sorting of the <see cref="VisjectCMItem"/>s of this <see cref="VisjectCMGroup"/>
         /// Also updates the <see cref="SortScore"/>
         /// </summary>

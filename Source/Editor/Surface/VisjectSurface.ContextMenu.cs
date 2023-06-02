@@ -113,6 +113,7 @@ namespace FlaxEditor.Surface
 
             // Offset added in case the user doesn't like the box and wants to quickly get rid of it by clicking
             OnShowPrimaryMenu(_activeVisjectCM, _cmStartPos + ContextMenuOffset, _connectionInstigator as Box);
+            _activeVisjectCM.UpdateConnectionLimits(false); // Hides any blocks that cannot connect to the specified type.
 
             if (!string.IsNullOrEmpty(input))
             {
