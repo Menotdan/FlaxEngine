@@ -133,8 +133,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// </summary>
         /// <param name="compareBox">The box to check if children can connect to.</param>
         /// <param name="preserveHidden">Should we preserve previous hidden values.</param>
-        /// <param name="matchExactly">Should we limit compatibility to exact type matches.</param>
-        public void UpdateCompatibleItem(Box compareBox, bool preserveHidden, bool matchExactly)
+        public void UpdateCompatibleItem(Box compareBox, bool preserveHidden)
         {
             Profiler.BeginEvent("VisjectCMGroup.UpdateCompatibleItem");
 
@@ -144,7 +143,7 @@ namespace FlaxEditor.Surface.ContextMenu
             {
                 if (_children[i] is VisjectCMItem item)
                 {
-                    item.UpdateCompatibleItem(compareBox, preserveHidden, matchExactly);
+                    item.UpdateCompatibleItem(compareBox, preserveHidden);
                     isAnyVisible |= item.Visible;
                 }
             }

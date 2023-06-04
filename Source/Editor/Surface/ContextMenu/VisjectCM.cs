@@ -460,8 +460,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// Call this when you need to update what can be shown at a context-based level.
         /// </summary>
         /// <param name="preserveHidden">Should we preserve previous hidden values.</param>
-        /// <param name="matchExactly">Should we limit compatibility to exact type matches.</param>
-        public void UpdateConnectionLimits(bool preserveHidden, bool matchExactly = true)
+        public void UpdateConnectionLimits(bool preserveHidden)
         {
             Profiler.BeginEvent("VisjectCM.UpdateConnectionLimits");
             if (_selectedBox == null && (!preserveHidden || string.IsNullOrEmpty(_searchBox.Text)))
@@ -475,7 +474,7 @@ namespace FlaxEditor.Surface.ContextMenu
             LockChildrenRecursive();
             for (int i = 0; i < _groups.Count; i++)
             {
-                _groups[i].UpdateCompatibleItem(_selectedBox, preserveHidden, matchExactly);
+                _groups[i].UpdateCompatibleItem(_selectedBox, preserveHidden);
                 _groups[i].UpdateItemSort(_selectedBox);
             }
             SortGroups();

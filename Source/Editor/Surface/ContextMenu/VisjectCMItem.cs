@@ -246,8 +246,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// </summary>
         /// <param name="compareBox">The box to check if we can connect to.</param>
         /// <param name="preserveHidden">Should we preserve previous hidden values.</param>
-        /// <param name="matchExactly">Should we limit compatibility to exact type matches.</param>
-        public void UpdateCompatibleItem(Box compareBox, bool preserveHidden, bool matchExactly)
+        public void UpdateCompatibleItem(Box compareBox, bool preserveHidden)
         {
             bool shouldShow = compareBox == null;
             if (shouldShow)
@@ -256,7 +255,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 return;
             }
 
-            shouldShow = matchExactly ? HasMatchingTypeExactly(compareBox, NodeArchetype) : CanConnectTo(compareBox, NodeArchetype);
+            shouldShow = CanConnectTo(compareBox, NodeArchetype);
             Visible = shouldShow && (!preserveHidden || Visible);
         }
 
