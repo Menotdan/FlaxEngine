@@ -436,6 +436,7 @@ namespace FlaxEditor.Surface.ContextMenu
             if (string.IsNullOrEmpty(_searchBox.Text))
             {
                 ResetView();
+                UpdateConnectionLimits(false);
                 Profiler.EndEvent();
                 return;
             }
