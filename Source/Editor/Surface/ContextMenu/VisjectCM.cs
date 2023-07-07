@@ -466,10 +466,13 @@ namespace FlaxEditor.Surface.ContextMenu
             Profiler.BeginEvent("VisjectCM.UpdateConnectionLimits");
             if (_selectedBox == null && (!preserveHidden || string.IsNullOrEmpty(_searchBox.Text)))
             {
+                Debug.Log("Real.");
                 ResetView();
                 Profiler.EndEvent();
                 return;
             }
+
+            Debug.Log("laer");
 
             // Update groups
             LockChildrenRecursive();

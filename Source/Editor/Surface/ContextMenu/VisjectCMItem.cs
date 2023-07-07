@@ -129,6 +129,74 @@ namespace FlaxEditor.Surface.ContextMenu
             return false;
         }
 
+        private string GetConnectionHintName(Box startBox)
+        {
+            string flags_display = "";
+            int hints = (int)(object)startBox.ParentNode.Archetype.ConnectionsHints;
+
+            if (hints == (int)(object) ConnectionsHint.All)
+            {
+                return "All";
+            }
+
+            if (hints == (int)(object) ConnectionsHint.None)
+            {
+                return "None";
+            }
+
+            if ((hints & (int)(object) ConnectionsHint.Numeric) != 0)
+            {
+                flags_display += " | Numeric";
+            }
+            else if ((hints & (int)(object)ConnectionsHint.Scalar) != 0)
+            {
+                flags_display += " | Scalar";
+            }
+            else if ((hints & (int)(object)ConnectionsHint.Vector) != 0)
+            {
+                flags_display += " | Vector";
+            }
+
+            if (hints == (int)(object)ConnectionsHint.Anything)
+            {
+                flags_display += " | Anything";
+            }
+
+            if ((hints & (int)(object)ConnectionsHint.Enum) != 0)
+            {
+                flags_display += " | Enum";
+            }
+
+            if ((hints & (int)(object)ConnectionsHint.Array) != 0)
+            {
+                flags_display += " | Array";
+            }
+
+            if ((hints & (int)(object)ConnectionsHint.Dictionary) != 0)
+            {
+                flags_display += " | Dictionary";
+            }
+
+            if ((hints & (int)(object)ConnectionsHint.Value) != 0)
+            {
+                flags_display += " | Value";
+            }
+
+            return flags_display;
+        }
+
+        private bool CouldEverConnectTo(Box startBox, NodeArchetype nodeArchetype)
+        {
+            if (CanConnectTo(startBox, nodeArchetype))
+            {
+                return true;
+            } else
+            {
+                Debug.Log(String.Format("{0}, {1}", GetConnectionHintName(startBox), nodeArchetype.Title));
+            }
+            return false;
+        }
+
         private bool HasMatchingTypeExactly(Box startBox, NodeArchetype nodeArchetype)
         {
             if (startBox == null)
@@ -255,7 +323,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 return;
             }
 
-            shouldShow = CanConnectTo(compareBox, NodeArchetype);
+            shouldShow = CouldEverConnectTo(compareBox, NodeArchetype);
             Visible = shouldShow && (!preserveHidden || Visible);
         }
 
