@@ -297,6 +297,11 @@ namespace FlaxEditor.GUI
                     }
                 }
             }
+            else if (button == MouseButton.Right)
+            {
+                PickAsset();
+            }
+
 
             // Handled
             return true;
