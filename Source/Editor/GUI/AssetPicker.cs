@@ -86,6 +86,39 @@ namespace FlaxEditor.GUI
             SelectedItemChanged?.Invoke();
         }
 
+        private void PickAsset()
+        {
+            Focus();
+            if (Validator.AssetType != ScriptType.Null)
+            {
+                // Show asset picker popup
+                var popup = AssetSearchPopup.Show(this, Button1Rect.BottomLeft, Validator.IsValid, item =>
+                {
+                    Validator.SelectedItem = item;
+                    RootWindow.Focus();
+                    Focus();
+                });
+                if (Validator.SelectedItem != null)
+                {
+                    popup.ScrollToAndHighlightItemByName(Validator.SelectedItem.ShortName);
+                }
+            }
+            else
+            {
+                // Show content item picker popup
+                var popup = ContentSearchPopup.Show(this, Button1Rect.BottomLeft, Validator.IsValid, item =>
+                {
+                    Validator.SelectedItem = item;
+                    RootWindow.Focus();
+                    Focus();
+                });
+                if (Validator.SelectedItem != null)
+                {
+                    popup.ScrollToAndHighlightItemByName(Validator.SelectedItem.ShortName);
+                }
+            }
+        }
+
         private void DoDrag()
         {
             // Do the drag drop operation if has selected element
@@ -247,36 +280,7 @@ namespace FlaxEditor.GUI
                 }
                 else if (Button1Rect.Contains(location))
                 {
-                    Focus();
-                    if (Validator.AssetType != ScriptType.Null)
-                    {
-                        // Show asset picker popup
-                        var popup = AssetSearchPopup.Show(this, Button1Rect.BottomLeft, Validator.IsValid, item =>
-                        {
-                            Validator.SelectedItem = item;
-                            RootWindow.Focus();
-                            Focus();
-                        });
-                        if (Validator.SelectedAsset != null)
-                        {
-                            var selectedAssetName = Path.GetFileNameWithoutExtension(Validator.SelectedAsset.Path);
-                            popup.ScrollToAndHighlightItemByName(selectedAssetName);
-                        }
-                    }
-                    else
-                    {
-                        // Show content item picker popup
-                        var popup = ContentSearchPopup.Show(this, Button1Rect.BottomLeft, Validator.IsValid, item =>
-                        {
-                            Validator.SelectedItem = item;
-                            RootWindow.Focus();
-                            Focus();
-                        });
-                        if (Validator.SelectedItem != null)
-                        {
-                            popup.ScrollToAndHighlightItemByName(Validator.SelectedItem.ShortName);
-                        }
-                    }
+                    PickAsset();
                 }
                 else if (Validator.SelectedAsset != null || Validator.SelectedItem != null)
                 {
