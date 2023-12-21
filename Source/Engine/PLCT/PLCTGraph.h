@@ -24,7 +24,11 @@ public:
 class VisjectPLCTGraph :
     public VisjectGraph<PLCTGraphNode>
 {
-    
+
+public:
+    // [VisjectGraph]
+    void Clear() override;
+    bool onNodeLoaded(Node* n) override;
 };
 
 /// <summary>
@@ -32,4 +36,41 @@ class VisjectPLCTGraph :
 /// </summary>
 API_CLASS(NoSpawn, Sealed) class FLAXENGINE_API PLCTGraph : public BinaryAsset {
     DECLARE_BINARY_ASSET_HEADER(PLCTGraph, 1);
+
+public:
+    VisjectPLCTGraph Graph;
+
+    /// <summary>
+    /// Tries to load surface graph from the asset.
+    /// </summary>
+    /// <returns>The surface data or empty if failed to load it.</returns>
+    API_FUNCTION() BytesContainer LoadSurface();
+
+#if USE_EDITOR
+    /// <summary>
+    /// Updates the graph surface (save new one, discard cached data, reload asset).
+    /// </summary>
+    /// <param name="data">Stream with graph data.</param>
+    /// <returns>True if cannot save it, otherwise false.</returns>
+    API_FUNCTION() bool SaveSurface(const BytesContainer& data);
+#endif
+
+private:
+#if USE_EDITOR
+    void OnScriptsReloadStart();
+    void OnScriptsReloadEnd();
+#endif
+
+public:
+    // [BinaryAsset]
+    void OnScriptingDispose() override;
+#if USE_EDITOR
+    void GetReferences(Array<Guid>& output) const override;
+#endif
+
+protected:
+    // [BinaryAsset]
+    LoadResult load() override;
+    void unload(bool isReloading) override;
+    AssetChunksFlag getChunksToPreload() const override;
 };

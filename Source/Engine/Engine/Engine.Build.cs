@@ -29,6 +29,7 @@ public class Engine : EngineModule
         options.PublicDependencies.Add("Networking");
         options.PublicDependencies.Add("Physics");
         options.PublicDependencies.Add("Particles");
+        options.PublicDependencies.Add("PLCT");
         options.PublicDependencies.Add("Scripting");
         options.PublicDependencies.Add("Serialization");
         options.PublicDependencies.Add("Streaming");
