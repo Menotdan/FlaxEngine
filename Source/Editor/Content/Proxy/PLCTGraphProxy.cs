@@ -27,7 +27,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
-            return new BehaviorTreeWindow(editor, item as BinaryAssetItem);
+            return new PLCTGraphWindow(editor, item as BinaryAssetItem);
         }
 
         /// <inheritdoc />

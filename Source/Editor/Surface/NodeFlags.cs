@@ -74,8 +74,13 @@ namespace FlaxEditor.Surface
         BehaviorTreeGraph = 1024,
 
         /// <summary>
+        /// Node can be used in PLCT graphs.
+        /// </summary>
+        PLCTGraph = 2048,
+
+        /// <summary>
         /// Node can be used in the all visual graphs.
         /// </summary>
-        AllGraphs = MaterialGraph | ParticleEmitterGraph | AnimGraph | VisualScriptGraph | BehaviorTreeGraph,
+        AllGraphs = MaterialGraph | ParticleEmitterGraph | AnimGraph | VisualScriptGraph | BehaviorTreeGraph | PLCTGraph,
     }
 }

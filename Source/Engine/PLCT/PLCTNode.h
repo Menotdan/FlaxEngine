@@ -9,4 +9,12 @@ API_CLASS(Abstract) class FLAXENGINE_API PLCTNode : public SerializableScripting
 {
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTNode, SerializableScriptingObject);
 
+public:
+    /// <summary>
+    /// Initializes node state. Called after whole graph is setup.
+    /// </summary>
+    /// <param name="graph">Node owner asset.</param>
+    API_FUNCTION() virtual void Init(PLCTGraph* graph)
+    {
+    }
 };
