@@ -1,7 +1,10 @@
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
+using FlaxEditor.SceneGraph;
+using FlaxEditor.Scripting;
 using FlaxEditor.Surface;
+using FlaxEditor.Viewport;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using System;
@@ -9,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -163,6 +167,70 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
+        private bool LoadSurface()
+        {
+            if (_surface.Load())
+            {
+                Editor.LogError("Failed to load PLCT Graph surface.");
+                return true;
+            }
+            return false;
+        }
+
+        private bool SaveSurface()
+        {
+            _surface.Save();
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override void Save()
+        {
+            if (!IsEdited || _asset == null || _isWaitingForSurfaceLoad)
+                return;
+
+            // Check if surface has been edited
+            if (_surface.IsEdited)
+            {
+                if (SaveSurface())
+                    return;
+            }
+
+            ClearEditedFlag();
+            OnSurfaceEditedChanged();
+            _item.RefreshThumbnail();
+        }
+
+        /// <inheritdoc />
+        protected override void UpdateToolstrip()
+        {
+            _saveButton.Enabled = _canEdit && IsEdited;
+            _undoButton.Enabled = _canEdit && _undo.CanUndo;
+            _redoButton.Enabled = _canEdit && _undo.CanRedo;
+
+            base.UpdateToolstrip();
+        }
+
+        /// <inheritdoc />
+        protected override void OnAssetLinked()
+        {
+            _isWaitingForSurfaceLoad = true;
+
+            base.OnAssetLinked();
+        }
+
+        /// <summary>
+        /// Focuses the node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        public void ShowNode(SurfaceNode node)
+        {
+            SelectTab();
+            RootWindow.Focus();
+            Surface.Focus();
+            Surface.FocusNode(node);
+        }
+
         /// <inheritdoc />
         public Asset SurfaceAsset => Asset;
 
@@ -217,6 +285,146 @@ namespace FlaxEditor.Windows.Assets
             _isWaitingForSurfaceLoad = false;
 
             base.UnlinkItem();
+        }
+
+        /// <inheritdoc />
+        public override void OnPlayBegin()
+        {
+            base.OnPlayBegin();
+
+            SetCanEdit(false);
+        }
+
+        /// <inheritdoc />
+        public override void OnPlayEnd()
+        {
+            SetCanEdit(true);
+
+            base.OnPlayEnd();
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            // Wait for asset loaded
+            if (_isWaitingForSurfaceLoad && _asset.IsLoaded)
+            {
+                _isWaitingForSurfaceLoad = false;
+                if (LoadSurface())
+                {
+                    Close();
+                    return;
+                }
+
+                // Setup
+                _undo.Clear();
+                _surface.Enabled = true;
+                _nodePropertiesEditor.BuildLayout();
+                ClearEditedFlag();
+                if (_showWholeGraphOnLoad)
+                {
+                    _showWholeGraphOnLoad = false;
+                    _surface.ShowWholeGraph();
+                }
+                SurfaceLoaded?.Invoke();
+            }
+
+            base.Update(deltaTime);
+        }
+
+        /// <inheritdoc />
+        public override bool UseLayoutData => true;
+
+        /// <inheritdoc />
+        public override void OnLayoutSerialize(XmlWriter writer)
+        {
+            LayoutSerializeSplitter(writer, "Split1", _split1);
+            LayoutSerializeSplitter(writer, "Split2", _split1);
+        }
+
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize(XmlElement node)
+        {
+            LayoutDeserializeSplitter(node, "Split1", _split1);
+            LayoutDeserializeSplitter(node, "Split2", _split2);
+        }
+
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize()
+        {
+            _split1.SplitterValue = 0.7f;
+            _split2.SplitterValue = 0.5f;
+        }
+
+        /*private void OnScriptsReloadBegin()
+        {
+            // TODO: impl hot-reload for BT to nicely refresh state (save asset, clear undo/properties, reload surface)
+            Close();
+        }*/
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            if (IsDisposing)
+                return;
+            //ScriptsBuilder.ScriptsReloadBegin -= OnScriptsReloadBegin;
+            _undo.Enabled = false;
+            _nodePropertiesEditor.Deselect();
+            _undo.Clear();
+
+            base.OnDestroy();
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<ScriptType> NewParameterTypes => Editor.CodeEditing.VisualScriptPropertyTypes.Get();
+
+        /// <inheritdoc />
+        public event Action SurfaceLoaded;
+
+        /// <inheritdoc />
+        public void OnParamRenameUndo()
+        {
+        }
+
+        /// <inheritdoc />
+        public void OnParamEditAttributesUndo()
+        {
+        }
+
+        /// <inheritdoc />
+        public void OnParamAddUndo()
+        {
+        }
+
+        /// <inheritdoc />
+        public void OnParamRemoveUndo()
+        {
+        }
+
+        /// <inheritdoc />
+        public object GetParameter(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public void SetParameter(int index, object value)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Asset VisjectAsset => Asset;
+
+        /// <inheritdoc />
+        public VisjectSurface VisjectSurface => _surface;
+
+        /// <inheritdoc />
+        public EditorViewport PresenterViewport => null;
+
+        /// <inheritdoc />
+        public void Select(List<SceneGraphNode> nodes)
+        {
         }
     }
 }

@@ -936,6 +936,11 @@ namespace FlaxEditor
             /// The <see cref="FlaxEngine.BehaviorTree"/>.
             /// </summary>
             BehaviorTree = 12,
+
+            /// <summary>
+            /// The <see cref="FlaxEngine.PLCTGraph"/>.
+            /// </summary>
+            PLCTGraph = 13,
         }
 
         /// <summary>

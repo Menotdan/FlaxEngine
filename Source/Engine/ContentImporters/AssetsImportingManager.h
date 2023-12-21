@@ -124,6 +124,11 @@ public:
     static const String CreateBehaviorTreeTag;
 
     /// <summary>
+    /// The create PLCT Graph asset tag.
+    /// </summary>
+    static const String CreatePLCTGraphTag;
+
+    /// <summary>
     /// The create visual script asset tag.
     /// </summary>
     static const String CreateVisualScriptTag;

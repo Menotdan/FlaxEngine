@@ -6,24 +6,24 @@
 
 #if COMPILE_WITH_ASSETS_IMPORTER
 
-#include "Engine/AI/BehaviorTree.h"
+#include "Engine/PLCT/PLCTGraph.h"
 
 /// <summary>
-/// Creating behavior tree utility
+/// Creating PLCT graph utility
 /// </summary>
-class CreateBehaviorTree
+class CreatePLCTGraph
 {
 public:
     static CreateAssetResult Create(CreateAssetContext& context)
     {
         // Base
-        IMPORT_SETUP(BehaviorTree, 1);
+        IMPORT_SETUP(PLCTGraph, 1);
 
         // Chunk 0 - Visject Surface
         if (context.AllocateChunk(0))
             return CreateAssetResult::CannotAllocateChunk;
         {
-            const BehaviorTreeGraph graph;
+            const VisjectPLCTGraph graph;
             MemoryWriteStream stream(64);
             graph.Save(&stream, true);
             context.Data.Header.Chunks[0]->Data.Copy(stream.GetHandle(), stream.GetPosition());

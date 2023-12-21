@@ -34,7 +34,7 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0x3256A8);
 
         /// <inheritdoc />
-        public override Type AssetType => typeof(BehaviorTree);
+        public override Type AssetType => typeof(PLCTGraph);
 
         /// <inheritdoc />
         public override bool CanCreate(ContentFolder targetLocation)
@@ -45,7 +45,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override void Create(string outputPath, object arg)
         {
-            if (Editor.CreateAsset(Editor.NewAssetType.BehaviorTree, outputPath))
+            if (Editor.CreateAsset(Editor.NewAssetType.PLCTGraph, outputPath))
                 throw new Exception("Failed to create new asset.");
         }
 

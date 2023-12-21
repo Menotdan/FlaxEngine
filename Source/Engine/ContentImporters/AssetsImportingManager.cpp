@@ -27,6 +27,7 @@
 #include "CreateSkeletonMask.h"
 #include "CreateParticleEmitter.h"
 #include "CreateParticleSystem.h"
+#include "CreatePLCTGraph.h"
 #include "CreateSceneAnimation.h"
 #include "CreateMaterialFunction.h"
 #include "CreateParticleEmitterFunction.h"
@@ -56,6 +57,7 @@ const String AssetsImportingManager::CreateParticleEmitterFunctionTag(TEXT("Part
 const String AssetsImportingManager::CreateAnimationGraphFunctionTag(TEXT("AnimationGraphFunction"));
 const String AssetsImportingManager::CreateAnimationTag(TEXT("Animation"));
 const String AssetsImportingManager::CreateBehaviorTreeTag(TEXT("BehaviorTree"));
+const String AssetsImportingManager::CreatePLCTGraphTag(TEXT("PLCTGraph"));
 const String AssetsImportingManager::CreateVisualScriptTag(TEXT("VisualScript"));
 
 class AssetsImportingManagerService : public EngineService
@@ -496,6 +498,7 @@ bool AssetsImportingManagerService::Init()
         { AssetsImportingManager::CreateAnimationGraphFunctionTag, CreateAnimationGraphFunction::Create },
         { AssetsImportingManager::CreateAnimationTag, CreateAnimation::Create },
         { AssetsImportingManager::CreateBehaviorTreeTag, CreateBehaviorTree::Create },
+        { AssetsImportingManager::CreatePLCTGraphTag, CreatePLCTGraph::Create },
         { AssetsImportingManager::CreateVisualScriptTag, CreateVisualScript::Create },
     };
     AssetsImportingManager::Creators.Add(InBuildCreators, ARRAY_COUNT(InBuildCreators));

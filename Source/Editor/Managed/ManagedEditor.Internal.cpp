@@ -185,6 +185,7 @@ enum class NewAssetType
     AnimationGraphFunction = 10,
     Animation = 11,
     BehaviorTree = 12,
+    PLCTGraph = 13,
 };
 
 DEFINE_INTERNAL_CALL(bool) EditorInternal_CreateAsset(NewAssetType type, MString* outputPathObj)
@@ -230,6 +231,9 @@ DEFINE_INTERNAL_CALL(bool) EditorInternal_CreateAsset(NewAssetType type, MString
         break;
     case NewAssetType::BehaviorTree:
         tag = AssetsImportingManager::CreateBehaviorTreeTag;
+        break;
+    case NewAssetType::PLCTGraph:
+        tag = AssetsImportingManager::CreatePLCTGraphTag;
         break;
     default:
         return true;
