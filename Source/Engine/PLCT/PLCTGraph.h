@@ -21,8 +21,15 @@ public:
 /// <summary>
 /// PLCT (Procedural Level Creation Tools) graph
 /// </summary>
-class PLCTGraph :
+class VisjectPLCTGraph :
     public VisjectGraph<PLCTGraphNode>
 {
+    
+};
 
+/// <summary>
+/// PLCT Graph
+/// </summary>
+API_CLASS(NoSpawn, Sealed) class FLAXENGINE_API PLCTGraph : public BinaryAsset {
+    DECLARE_BINARY_ASSET_HEADER(PLCTGraph, 1);
 };
