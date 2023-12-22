@@ -182,6 +182,13 @@ namespace FlaxEditor.Surface
                 Color = new Color(70, 220, 181),
                 Archetypes = Archetypes.BehaviorTree.Nodes
             },
+            new GroupArchetype
+            {
+                GroupID = 20,
+                Name = "PLCT Graph",
+                Color = new Color(4, 0, 222),
+                Archetypes = Archetypes.PLCT.Nodes
+            }
         };
 
         /// <summary>

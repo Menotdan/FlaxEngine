@@ -19,4 +19,9 @@ public:
     API_FUNCTION() virtual void Init(PLCTGraph* graph)
     {
     }
+
+    API_PROPERTY() FORCE_INLINE virtual int NodeArchetypeIndex() const
+    {
+        return 0;
+    }
 };

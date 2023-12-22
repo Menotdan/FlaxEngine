@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace FlaxEditor.Surface.Archetypes
 {
     /// <summary>
-    /// Contains archetypes for nodes from the Behavior Tree group.
+    /// Contains archetypes for nodes from the PLCT Graph group.
     /// </summary>
     [HideInEditor]
     public static class PLCT
@@ -82,7 +82,7 @@ namespace FlaxEditor.Surface.Archetypes
                     }
                     catch (Exception ex)
                     {
-                        Editor.LogError("Failed to load Behavior Tree node of type " + typeName);
+                        Editor.LogError("Failed to load PLCT Graph node of type " + typeName);
                         Editor.LogWarning(ex);
                     }
                 }
@@ -154,9 +154,6 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         internal class Node : NodeBase
         {
-            private InputBox _input;
-            private OutputBox _output;
-
             internal static SurfaceNode Create(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
             {
                 return new Node(id, context, nodeArch, groupArch);
@@ -182,12 +179,6 @@ namespace FlaxEditor.Surface.Archetypes
             public override void OnLoaded(SurfaceNodeActions action)
             {
                 base.OnLoaded(action);
-
-                // Setup boxes
-                _input = (InputBox)GetBox(0);
-                _output = (OutputBox)GetBox(1);
-                _input.ConnectionOffset = new Float2(0, FlaxEditor.Surface.Constants.BoxSize * -0.5f);
-                _output.ConnectionOffset = new Float2(0, FlaxEditor.Surface.Constants.BoxSize * 0.5f);
 
                 ResizeAuto();
             }
@@ -230,21 +221,36 @@ namespace FlaxEditor.Surface.Archetypes
         {
             new NodeArchetype
             {
-                TypeID = 1, // Test Node
+                TypeID = 1,
                 Create = Node.Create,
-                Flags = NodeFlags.PLCTGraph,
-                Title = "Test PLCT Node",
+                Flags = NodeFlags.PLCTGraph | NodeFlags.NoSpawnViaGUI,
+                Title = "PLCT Node (0, 1) (I, O)",
                 DefaultValues = new object[]
                 {
                     string.Empty, // Type Name
                     Utils.GetEmptyArray<byte>(), // Instance Data
-                    null, // List of Decorator Nodes IDs
                 },
                 Size = new Float2(100, 100),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "Test Input", true, ScriptType.Void, 0),
-                    NodeElementArchetype.Factory.Output(0, "Test Output", ScriptType.Void, 1),
+                    NodeElementArchetype.Factory.Output(0, "Surface", ScriptType.Void, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 2,
+                Create = Node.Create,
+                Flags = NodeFlags.PLCTGraph | NodeFlags.NoSpawnViaGUI,
+                Title = "PLCT Node (1, 0) (I, O)",
+                DefaultValues = new object[]
+                {
+                    string.Empty, // Type Name
+                    Utils.GetEmptyArray<byte>(), // Instance Data
+                },
+                Size = new Float2(100, 100),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Surface", true, ScriptType.Void, 0),
                 }
             },
         };

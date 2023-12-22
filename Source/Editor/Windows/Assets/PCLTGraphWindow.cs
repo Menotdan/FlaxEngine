@@ -137,7 +137,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 for (var i = 0; i < nodes.Count; i++)
                 {
-                    if (nodes[i] is Surface.Archetypes.BehaviorTree.NodeBase node && node.IsSelected && node.Instance)
+                    if (nodes[i] is Surface.Archetypes.PLCT.NodeBase node && node.IsSelected && node.Instance)
                         selection.Add(node.Instance);
                 }
             }
@@ -150,7 +150,7 @@ namespace FlaxEditor.Windows.Assets
             var nodes = _surface.Nodes;
             for (var i = 0; i < _nodePropertiesEditor.Selection.Count; i++)
             {
-                if (_nodePropertiesEditor.Selection[i] is BehaviorTreeNode instance)
+                if (_nodePropertiesEditor.Selection[i] is PLCTNode instance)
                 {
                     // Sync instance data with surface node value storage
                     for (var j = 0; j < nodes.Count; j++)
