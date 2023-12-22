@@ -40,8 +40,8 @@ namespace FlaxEditor.Surface.Archetypes
             public static string GetTitle(ScriptType scriptType)
             {
                 var title = scriptType.Name;
-                if (title.StartsWith("PLCTGraph"))
-                    title = title.Substring(9);
+                if (title.StartsWith("PLCT"))
+                    title = title.Substring(4);
                 if (title.EndsWith("Node"))
                     title = title.Substring(0, title.Length - 4);
                 title = Utilities.Utils.GetPropertyNameUI(title);
