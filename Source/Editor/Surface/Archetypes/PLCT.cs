@@ -224,7 +224,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Create = Node.Create,
                 Flags = NodeFlags.PLCTGraph | NodeFlags.NoSpawnViaGUI,
-                Title = "PLCT Node (0, 1) (I, O)",
+                Title = "PLCT Node Surface Input",
                 DefaultValues = new object[]
                 {
                     string.Empty, // Type Name
@@ -233,7 +233,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Float2(100, 100),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Output(0, "Surface", ScriptType.Void, 0),
+                    NodeElementArchetype.Factory.Output(0, "Surface", new ScriptType(typeof(PLCTSurface)), 0),
                 }
             },
             new NodeArchetype
@@ -241,7 +241,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Create = Node.Create,
                 Flags = NodeFlags.PLCTGraph | NodeFlags.NoSpawnViaGUI,
-                Title = "PLCT Node (1, 0) (I, O)",
+                Title = "PLCT Node Surface Input",
                 DefaultValues = new object[]
                 {
                     string.Empty, // Type Name
@@ -250,7 +250,25 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Float2(100, 100),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "Surface", true, ScriptType.Void, 0),
+                    NodeElementArchetype.Factory.Input(0, "Surface", true, new ScriptType(typeof(PLCTSurface)), 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 3,
+                Create = Node.Create,
+                Flags = NodeFlags.PLCTGraph | NodeFlags.NoSpawnViaGUI,
+                Title = "PLCT Node Surface Input Points Output",
+                DefaultValues = new object[]
+                {
+                    string.Empty, // Type Name
+                    Utils.GetEmptyArray<byte>(), // Instance Data
+                },
+                Size = new Float2(100, 100),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Surface", true, new ScriptType(typeof(PLCTSurface)), 0),
+                    NodeElementArchetype.Factory.Output(0, "Points", new ScriptType(typeof(PLCTSurface)), 1),
                 }
             },
         };

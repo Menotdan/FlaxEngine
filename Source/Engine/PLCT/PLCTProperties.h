@@ -19,6 +19,9 @@
 API_CLASS(NoSpawn) class FLAXENGINE_API PLCTProperty : public ScriptingObject
 {
     DECLARE_SCRIPTING_TYPE_NO_SPAWN(PLCTProperty);
+    PLCTProperty()
+        : ScriptingObject(SpawnParams(Guid::New(), PLCTProperty::TypeInitializer))
+    {}
 
 public:
     API_FIELD() String Name;
@@ -258,6 +261,22 @@ public:
         return result;
     }
 
+    API_FUNCTION() FORCE_INLINE PLCTProperty* EnsureProperty(String name)
+    {
+        PLCTProperty* result = GetProperty(name);
+        if (result != nullptr)
+        {
+            return result;
+        }
+
+        PLCTProperty newProperty = PLCTProperty();
+        newProperty.Data = Variant(nullptr);
+        newProperty.Name = name;
+        _properties.Add(newProperty);
+
+        return result;
+    }
+
     API_FUNCTION() FORCE_INLINE Variant GetPropertyValue(String name)
     {
         PLCTProperty* property = GetProperty(name);
@@ -282,5 +301,5 @@ public:
     }
 
 private:
-    Array<PLCTProperty, DefaultAllocation> _properties;
+    Array<PLCTProperty> _properties;
 };
