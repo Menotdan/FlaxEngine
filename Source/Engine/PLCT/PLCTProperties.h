@@ -3,10 +3,12 @@
 #include "Engine/Core/Config.h"
 #include "Engine/Core/Types/String.h"
 #include "Engine/Core/Math/Quaternion.h"
+#include "Engine/Core/Math/Transform.h"
 #include "Engine/Core/Math/Vector2.h"
 #include "Engine/Core/Math/Vector3.h"
 #include "Engine/Core/Math/Vector4.h"
 #include "Engine/Core/Types/Variant.h"
+#include "Engine/Core/Collections/Array.h"
 #include "Engine/Core/Log.h"
 #include "Engine/Scripting/ScriptingType.h"
 #include "Engine/Scripting/ScriptingObject.h"
@@ -16,7 +18,7 @@
 /// </summary>
 API_CLASS(NoSpawn) class FLAXENGINE_API PLCTProperty : public ScriptingObject
 {
-    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTProperty, ScriptingObject);
+    DECLARE_SCRIPTING_TYPE_NO_SPAWN(PLCTProperty);
 
 public:
     API_FIELD() String Name;
@@ -26,7 +28,7 @@ public:
     {
         if (value.Type == VariantType::Null)
         {
-            LOG(Warning, "PLCT Property set as null! (Ignored)");
+            LOG(Warning, "PLCT Property '{0}' set as null! (Ignored)", Name);
             return;
         }
 
@@ -34,7 +36,7 @@ public:
         {
             if (!(Data.Type == value.Type))
             {
-                LOG(Warning, "PLCT Property type overridden! (Ignored)");
+                LOG(Warning, "PLCT Property '{0}' type overridden! (Ignored)", Name);
                 return;
             }
         }
@@ -202,6 +204,21 @@ public:
         return false;
     }
 
+    /// Gets a Vector2 from this property.
+    /// </summary>
+    /// <param name="output">The output.</param>
+    /// <returns>True if got the value, otherwise false.</returns>
+    API_FUNCTION() FORCE_INLINE bool GetVector2(API_PARAM(Out) Transform& output)
+    {
+        if (Data.Type == VariantType::Transform)
+        {
+            output = Data.AsTransform();
+            return true;
+        }
+
+        return false;
+    }
+
     /// Gets a String from this property.
     /// </summary>
     /// <param name="output">The output.</param>
@@ -216,4 +233,54 @@ public:
 
         return false;
     }
+};
+
+/// <summary>
+/// PLCT Property list storage. 
+/// </summary>
+API_CLASS(NoSpawn) class FLAXENGINE_API PLCTPropertyStorage : public ScriptingObject
+{
+    DECLARE_SCRIPTING_TYPE_NO_SPAWN(PLCTPropertyStorage);
+
+public:
+    API_FUNCTION() FORCE_INLINE PLCTProperty* GetProperty(String name)
+    {
+        PLCTProperty *result = nullptr;
+        for (int i = 0; i < _properties.Count(); i++)
+        {
+            if (!_properties[i].Name.Compare(name))
+            {
+                result = &_properties[i];
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    API_FUNCTION() FORCE_INLINE Variant GetPropertyValue(String name)
+    {
+        PLCTProperty* property = GetProperty(name);
+        if (property == nullptr)
+        {
+            return Variant(nullptr);
+        }
+
+        return property->Data;
+    }
+
+    API_FUNCTION() FORCE_INLINE bool SetPropertyValue(String name, Variant value)
+    {
+        PLCTProperty* property = GetProperty(name);
+        if (property == nullptr)
+        {
+            return false;
+        }
+
+        property->SetValue(value);
+        return true;
+    }
+
+private:
+    Array<PLCTProperty, DefaultAllocation> _properties;
 };
