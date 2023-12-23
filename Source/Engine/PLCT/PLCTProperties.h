@@ -24,9 +24,20 @@ API_CLASS(NoSpawn) class FLAXENGINE_API PLCTProperty : public ScriptingObject
     {}
 
 public:
+    /// <summary>
+    /// The name of the property. Used to reference it.
+    /// </summary>
     API_FIELD() String Name;
+
+    /// <summary>
+    /// The object data being stored in this property.
+    /// </summary>
     API_FIELD() Variant Data;
 
+    /// <summary>
+    /// Sets a new value for the property, ignoring it if the type would change.
+    /// </summary>
+    /// <param name="value">The new value of the property.</param>
     API_FUNCTION() FORCE_INLINE void SetValue(Variant value)
     {
         if (value.Type == VariantType::Null)
@@ -245,7 +256,16 @@ API_CLASS(NoSpawn) class FLAXENGINE_API PLCTPropertyStorage : public ScriptingOb
 {
     DECLARE_SCRIPTING_TYPE_NO_SPAWN(PLCTPropertyStorage);
 
+    PLCTPropertyStorage()
+        : ScriptingObject(SpawnParams(Guid::New(), PLCTPropertyStorage::TypeInitializer))
+    {}
+
 public:
+    /// <summary>
+    /// Get the property associated with this name.
+    /// </summary>
+    /// <param name="name">The name of the target property.</param>
+    /// <returns>The property, or null if it does not exist.</returns>
     API_FUNCTION() FORCE_INLINE PLCTProperty* GetProperty(String name)
     {
         PLCTProperty *result = nullptr;
@@ -261,6 +281,11 @@ public:
         return result;
     }
 
+    /// <summary>
+    /// Ensures there is a property with this name.
+    /// </summary>
+    /// <param name="name">The property to ensure is created.</param>
+    /// <returns>The property, which has either been created or read from the list.</returns>
     API_FUNCTION() FORCE_INLINE PLCTProperty* EnsureProperty(String name)
     {
         PLCTProperty* result = GetProperty(name);
@@ -277,6 +302,11 @@ public:
         return result;
     }
 
+    /// <summary>
+    /// Gets the value of a property.
+    /// </summary>
+    /// <param name="name">The name of the property.</param>
+    /// <returns>The value of the property, or null if it does not exist.</returns>
     API_FUNCTION() FORCE_INLINE Variant GetPropertyValue(String name)
     {
         PLCTProperty* property = GetProperty(name);
@@ -288,6 +318,12 @@ public:
         return property->Data;
     }
 
+    /// <summary>
+    /// Sets the value of a property.
+    /// </summary>
+    /// <param name="name">The name of the property.</param>
+    /// <param name="value">The intended new value.</param>
+    /// <returns>A bool indicating if the property was set.</returns>
     API_FUNCTION() FORCE_INLINE bool SetPropertyValue(String name, Variant value)
     {
         PLCTProperty* property = GetProperty(name);
