@@ -1,7 +1,8 @@
 #pragma once
 
 #include "BoxVolume.h"
-#include "Engine/PLCT/PLCTSurface.h"
+
+class PLCTSurface;
 
 API_CLASS(Attributes = "ActorContextMenu(\"New/Other/PLCT Volume\"), ActorToolbox(\"Other\")")
 class FLAXENGINE_API PLCTVolume : public BoxVolume

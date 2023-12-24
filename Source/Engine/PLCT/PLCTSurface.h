@@ -8,6 +8,8 @@
 #include "Engine/Scripting/ScriptingObject.h"
 #include "Engine/Scripting/ScriptingType.h"
 
+class PLCTVolume;
+
 /// <summary>
 /// PLCT Surface class used for sampling points.
 /// </summary>
@@ -47,11 +49,22 @@ public:
         return true;
     }
 
-    API_FUNCTION() virtual bool CheckActorMatches(Actor* actor)
+    API_FUNCTION() virtual bool CheckActorMatchesAndSet(Actor* actor)
     {
         return false;
     }
 
+    API_PROPERTY() PLCTVolume* GetVolume()
+    {
+        return _volume;
+    }
+
+    API_PROPERTY() void SetVolume(PLCTVolume* volume)
+    {
+        _volume = volume;
+    }
+
 private:
     PLCTPropertyStorage _properties;
+    PLCTVolume* _volume = nullptr;
 };
