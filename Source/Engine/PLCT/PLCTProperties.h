@@ -218,11 +218,11 @@ public:
         return false;
     }
 
-    /// Gets a Vector2 from this property.
+    /// Gets a Transform from this property.
     /// </summary>
     /// <param name="output">The output.</param>
     /// <returns>True if got the value, otherwise false.</returns>
-    API_FUNCTION() FORCE_INLINE bool GetVector2(API_PARAM(Out) Transform& output)
+    API_FUNCTION() FORCE_INLINE bool GetTransform(API_PARAM(Out) Transform& output)
     {
         if (Data.Type == VariantType::Transform)
         {

@@ -34,7 +34,7 @@ public:
     /// <returns>Sampled point, or null if there is no valid point.</returns>
     API_FUNCTION() virtual PLCTPoint* SampleXZ(Vector2 coordinates)
     {
-        return new PLCTPoint();
+        return nullptr;
     }
 
     /// <summary>
@@ -45,8 +45,7 @@ public:
     /// <returns>True if there is a valid point, otherwise false.</returns>
     API_FUNCTION() virtual bool SampleXZ(Vector2 coordinates, PLCTPointsContainer* targetContainer)
     {
-        targetContainer->GetPoints().Add(PLCTPoint());
-        return true;
+        return false;
     }
 
     API_FUNCTION() virtual bool CheckActorMatchesAndSet(Actor* actor)

@@ -23,6 +23,29 @@ public:
         return &_properties;
     }
 
+    /// <summary>
+    /// Set the transform of this point.
+    /// </summary>
+    /// <param name="transform">The new value.</param>
+    API_PROPERTY() void SetTransform(Transform& transform)
+    {
+        _properties.EnsureProperty(TEXT("Transform"));
+        _properties.SetPropertyValue(TEXT("Transform"), Variant(transform));
+    }
+
+    /// <summary>
+    /// Get the transform of this point.
+    /// </summary>
+    /// <returns>The transform property, or an identity transform if it does not exist.</returns>
+    API_PROPERTY() Transform GetTransform()
+    {
+        PLCTProperty* transformProperty = _properties.GetProperty(TEXT("Transform"));
+
+        Transform transform = Transform::Identity;
+        transformProperty->GetTransform(transform);
+        return transform;
+    }
+
 private:
     PLCTPropertyStorage _properties;
 };
