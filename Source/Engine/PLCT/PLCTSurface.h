@@ -3,6 +3,8 @@
 #include "PLCTProperties.h"
 #include "PLCTPoint.h"
 #include "Engine/Core/Config.h"
+#include "Engine/Core/Delegate.h"
+#include "Engine/Level/Actor.h"
 #include "Engine/Scripting/ScriptingObject.h"
 #include "Engine/Scripting/ScriptingType.h"
 
@@ -43,6 +45,11 @@ public:
     {
         targetContainer->GetPoints().Add(PLCTPoint());
         return true;
+    }
+
+    API_FUNCTION() virtual bool CheckActorMatches(Actor* actor)
+    {
+        return false;
     }
 
 private:

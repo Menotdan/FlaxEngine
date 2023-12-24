@@ -6,3 +6,8 @@ PLCTVolume::PLCTVolume(const SpawnParams& params)
 {
     LOG(Warning, "Created new PLCT volume.");
 }
+
+bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)
+{
+    return false;
+}
