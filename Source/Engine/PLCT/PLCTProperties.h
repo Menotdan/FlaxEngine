@@ -16,12 +16,9 @@
 /// <summary>
 /// PLCT Property class. Represents one property of a PLCT object.
 /// </summary>
-API_CLASS(NoSpawn) class FLAXENGINE_API PLCTProperty : public ScriptingObject
+API_CLASS() class FLAXENGINE_API PLCTProperty : public ScriptingObject
 {
-    DECLARE_SCRIPTING_TYPE_NO_SPAWN(PLCTProperty);
-    PLCTProperty()
-        : ScriptingObject(SpawnParams(Guid::New(), PLCTProperty::TypeInitializer))
-    {}
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTProperty, ScriptingObject);
 
 public:
     /// <summary>
@@ -252,13 +249,9 @@ public:
 /// <summary>
 /// PLCT Property list storage. 
 /// </summary>
-API_CLASS(NoSpawn) class FLAXENGINE_API PLCTPropertyStorage : public ScriptingObject
+API_CLASS() class FLAXENGINE_API PLCTPropertyStorage : public ScriptingObject
 {
-    DECLARE_SCRIPTING_TYPE_NO_SPAWN(PLCTPropertyStorage);
-
-    PLCTPropertyStorage()
-        : ScriptingObject(SpawnParams(Guid::New(), PLCTPropertyStorage::TypeInitializer))
-    {}
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTPropertyStorage, ScriptingObject);
 
 public:
     /// <summary>

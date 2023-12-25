@@ -17,12 +17,18 @@ bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)
     {
         Scene* readingScene = sceneIdx == -1 ? this->GetScene() : Level::Scenes[sceneIdx];
         if (readingScene == this->GetScene() && sceneIdx != -1)
-            break;
+            continue;
 
         Array<Actor*> sceneActors = readingScene->GetChildren<Actor>();
         for (int actorIdx = 0; actorIdx < sceneActors.Count(); actorIdx++)
         {
             Actor* actor = sceneActors[actorIdx];
+            ContainmentType contains = this->GetOrientedBox().Contains(actor->GetSphere());
+            if (contains == ContainmentType::Disjoint)
+            {
+                continue;
+            }
+
             if (surface->CheckActorMatchesAndSet(actor))
             {
                 surface->SetVolume(this);

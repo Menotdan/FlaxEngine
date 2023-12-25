@@ -43,9 +43,9 @@ struct Face
 /// <summary>
 /// Box collider PLCT surface.
 /// </summary>
-API_CLASS(Abstract, NoSpawn) class FLAXENGINE_API BoxColliderSurface : public PLCTSurface
+API_CLASS() class FLAXENGINE_API BoxColliderSurface : public PLCTSurface
 {
-    DECLARE_SCRIPTING_TYPE_NO_SPAWN(BoxColliderSurface);
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(BoxColliderSurface, PLCTSurface);
 
 public:
     // [PLCTSurface]

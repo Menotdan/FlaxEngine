@@ -5,13 +5,9 @@
 /// <summary>
 /// PLCT object used to represent points.
 /// </summary>
-API_CLASS(NoSpawn) class FLAXENGINE_API PLCTPoint : public ScriptingObject
+API_CLASS() class FLAXENGINE_API PLCTPoint : public ScriptingObject
 {
-    DECLARE_SCRIPTING_TYPE_NO_SPAWN(PLCTPoint);
-
-    PLCTPoint()
-        : ScriptingObject(SpawnParams(Guid::New(), PLCTPoint::TypeInitializer))
-    {}
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTPoint, ScriptingObject);
 
 public:
     /// <summary>
@@ -53,9 +49,9 @@ private:
 /// <summary>
 /// PLCT points container, which holds an array of points and allows you to perform operations on them.
 /// </summary>
-API_CLASS(NoSpawn) class FLAXENGINE_API PLCTPointsContainer : public ScriptingObject
+API_CLASS() class FLAXENGINE_API PLCTPointsContainer : public ScriptingObject
 {
-    DECLARE_SCRIPTING_TYPE_NO_SPAWN(PLCTPointsContainer);
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTPointsContainer, ScriptingObject);
 
 public:
     /// <summary>
