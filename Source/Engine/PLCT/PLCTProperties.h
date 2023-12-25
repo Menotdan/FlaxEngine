@@ -56,6 +56,7 @@ public:
     }
 
 public:
+
     /// <summary>
     /// Gets a Uint64 from this property.
     /// </summary>
@@ -200,6 +201,7 @@ public:
         return false;
     }
 
+    /// <summary>
     /// Gets a Vector2 from this property.
     /// </summary>
     /// <param name="output">The output.</param>
@@ -215,6 +217,7 @@ public:
         return false;
     }
 
+    /// <summary>
     /// Gets a Transform from this property.
     /// </summary>
     /// <param name="output">The output.</param>
@@ -230,6 +233,7 @@ public:
         return false;
     }
 
+    /// <summary>
     /// Gets a String from this property.
     /// </summary>
     /// <param name="output">The output.</param>

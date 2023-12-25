@@ -27,10 +27,13 @@ public:
         PLCTPointsContainer* container = new PLCTPointsContainer();
         OrientedBoundingBox box = volume->GetOrientedBox();
         Vector2 start = Vector2(box.GetCenter().X, box.GetCenter().Z) + Vector2(box.Extents.X, box.Extents.Z);
-        Vector2 current = start;
 
         Vector2 left = Vector2(box.Transformation.GetLeft().X, box.Transformation.GetLeft().Z);
         Vector2 back = Vector2(box.Transformation.GetBackward().X, box.Transformation.GetBackward().Z);
+        start += left * 0.01f;
+        start += back * 0.01f;
+
+        Vector2 current = start;
 
         int iterationCount = 0;
         while (true)
@@ -42,7 +45,7 @@ public:
                 iterationCount++;
 
                 // Reset back to the right
-                current = start + back * _settings.Spacing;
+                current = start + (back * (_settings.Spacing * (float) iterationCount));
                 if (!Check(volume, current))
                 {
                     break;

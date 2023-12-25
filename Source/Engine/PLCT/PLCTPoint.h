@@ -58,7 +58,7 @@ public:
     /// Get the array of points in this container.
     /// </summary>
     /// <returns>The points array.</returns>
-    API_PROPERTY() Array<PLCTPoint> GetPoints()
+    API_PROPERTY() Array<PLCTPoint>& GetPoints()
     {
         return _points;
     }

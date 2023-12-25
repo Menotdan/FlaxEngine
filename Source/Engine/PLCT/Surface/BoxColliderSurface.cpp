@@ -62,7 +62,7 @@ bool BoxColliderSurface::SampleXZ(Vector2 coordinates, PLCTPointsContainer* targ
     {
         return false;
     }
-    
+
     targetContainer->GetPoints().Add(*point);
     return true;
 }
