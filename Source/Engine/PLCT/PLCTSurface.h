@@ -48,6 +48,11 @@ public:
         return false;
     }
 
+    /// <summary>
+    /// Check that the passed actor matches the sample condition for this surface, and then sets it internally if it matches.
+    /// </summary>
+    /// <param name="actor">The actor to test.</param>
+    /// <returns>True if the actor matches, otherwise false.</returns>
     API_FUNCTION() virtual bool CheckActorMatchesAndSet(Actor* actor)
     {
         return false;

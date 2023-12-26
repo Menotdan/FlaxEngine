@@ -1,4 +1,5 @@
 #include "BoxColliderSurface.h"
+#include "Engine/Level/Actors/PLCTVolume.h"
 
 PLCTPoint* BoxColliderSurface::SampleXZ(Vector2 xz)
 {
@@ -13,13 +14,15 @@ PLCTPoint* BoxColliderSurface::SampleXZ(Vector2 xz)
     Vector3 corners[8];
     actorBox.GetCorners(corners);
 
-    Face faces[6];
-    faces[0] = { corners[0], corners[1], corners[2], corners[3]}; // top
-    faces[1] = { corners[4], corners[5], corners[6], corners[7] }; // bottom
-    faces[2] = { corners[4], corners[0], corners[3], corners[7] }; // front
-    faces[3] = { corners[6], corners[2], corners[1], corners[5] }; // back
-    faces[4] = { corners[5], corners[1], corners[0], corners[4] }; // left
-    faces[5] = { corners[7], corners[3], corners[2], corners[6] }; // right
+    Face faces[6] =
+    {
+        { corners[0], corners[1], corners[2], corners[3] }, // top
+        { corners[5], corners[4], corners[7], corners[6] }, // bottom
+        { corners[4], corners[0], corners[3], corners[7] }, // front
+        { corners[1], corners[5], corners[6], corners[2] }, // back
+        { corners[4], corners[5], corners[1], corners[0] }, // left
+        { corners[3], corners[2], corners[6], corners[7] }, // right
+    };
 
     float highestY = 0;
     bool foundAny = false;
@@ -31,6 +34,13 @@ PLCTPoint* BoxColliderSurface::SampleXZ(Vector2 xz)
         }
 
         float y = faces[face].GetYAt(xz);
+        float maxY = GetVolume()->GetBox().Maximum.Y;
+        float minY = GetVolume()->GetBox().Minimum.Y;
+        if (y > maxY || y < minY)
+        {
+            continue;
+        }
+
         if (y > highestY || !foundAny)
         {
             highestY = y;
