@@ -11,8 +11,9 @@ PLCTVolume::PLCTVolume(const SpawnParams& params)
     LOG(Warning, "Created new PLCT volume.");
 }
 
-bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)
+bool PLCTVolume::FindSurfaceAtIndex(PLCTSurface* surface, int index)
 {
+    int foundCounter = 0;
     for (int sceneIdx = -1; sceneIdx < Level::Scenes.Count(); sceneIdx++)
     {
         Scene* readingScene = sceneIdx == -1 ? this->GetScene() : Level::Scenes[sceneIdx];
@@ -31,6 +32,12 @@ bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)
 
             if (surface->CheckActorMatchesAndSet(actor))
             {
+                if (foundCounter != index)
+                {
+                    foundCounter++;
+                    continue;
+                }
+
                 surface->SetVolume(this);
                 return true;
             }
@@ -38,4 +45,16 @@ bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)
     }
 
     return false;
+}
+
+bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)
+{
+    return FindSurfaceAtIndex(surface, 0);
+}
+
+PLCTSurfaceList* FindAllSurfaces(PLCTSurface* baseInstance)
+{
+    bool foundAnySurface = false;
+    PLCTSurfaceList* surfaces = new PLCTSurfaceList();
+    
 }

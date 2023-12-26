@@ -72,3 +72,24 @@ private:
     PLCTPropertyStorage _properties;
     PLCTVolume* _volume = nullptr;
 };
+
+/// <summary>
+/// PLCT surface list, which allows you to reference multiple surfaces to sample.
+/// </summary>
+API_CLASS() class FLAXENGINE_API PLCTSurfaceList : public ScriptingObject
+{
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTSurfaceList, ScriptingObject);
+
+public:
+    /// <summary>
+    /// Get this array of surfaces.
+    /// </summary>
+    /// <returns>The surfaces array.</returns>
+    API_PROPERTY() Array<PLCTSurface>& GetSurfaces()
+    {
+        return _surfaces;
+    }
+
+private:
+    Array<PLCTSurface> _surfaces;
+};

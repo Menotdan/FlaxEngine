@@ -50,9 +50,9 @@ API_CLASS(Sealed) class FLAXENGINE_API BoxColliderSurface : public PLCTSurface
 
 public:
     // [PLCTSurface]
-    virtual PLCTPoint* SampleXZ(Vector2 coordinates) override;
-    virtual bool SampleXZ(Vector2 coordinates, PLCTPointsContainer* targetContainer) override;
-    virtual bool CheckActorMatchesAndSet(Actor* actor) override;
+    PLCTPoint* SampleXZ(Vector2 coordinates) override;
+    bool SampleXZ(Vector2 coordinates, PLCTPointsContainer* targetContainer) override;
+    bool CheckActorMatchesAndSet(Actor* actor) override;
 
 private:
     BoxCollider* _actor = nullptr;
