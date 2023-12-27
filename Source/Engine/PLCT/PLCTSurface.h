@@ -18,6 +18,8 @@ API_CLASS(Abstract) class FLAXENGINE_API PLCTSurface : public ScriptingObject
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTSurface, ScriptingObject);
 
 public:
+    ~PLCTSurface() = default;
+
     /// <summary>
     /// Gets the properties of the surface.
     /// </summary>
@@ -83,7 +85,7 @@ API_CLASS() class FLAXENGINE_API PLCTSurfaceList : public ScriptingObject
 
     ~PLCTSurfaceList()
     {
-        _surfaces.Clear();
+        _surfaces.ClearDelete();
     }
 
 public:

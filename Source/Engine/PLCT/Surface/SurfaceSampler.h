@@ -22,6 +22,8 @@ API_CLASS() class FLAXENGINE_API SurfaceSampler : public ScriptingObject
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(SurfaceSampler, ScriptingObject);
 
 public:
+    ~SurfaceSampler() = default;
+
     /// <summary>
     /// Sample all XZ coordinates.
     /// </summary>
