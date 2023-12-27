@@ -3,6 +3,7 @@
 #include "BoxVolume.h"
 
 class PLCTSurface;
+class PLCTSurfaceList;
 
 /// <summary>
 /// PLCT Volume.

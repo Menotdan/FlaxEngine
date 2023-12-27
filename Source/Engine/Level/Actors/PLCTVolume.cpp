@@ -4,6 +4,7 @@
 #include "Engine/Level/Actor.h"
 #include "Engine/Level/Level.h"
 #include "Engine/PLCT/PLCTSurface.h"
+#include <typeinfo>
 
 PLCTVolume::PLCTVolume(const SpawnParams& params)
     : BoxVolume(params)
@@ -52,9 +53,25 @@ bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)
     return FindSurfaceAtIndex(surface, 0);
 }
 
-PLCTSurfaceList* FindAllSurfaces(PLCTSurface* baseInstance)
+PLCTSurfaceList* PLCTVolume::FindAllSurfaces(PLCTSurface* baseInstance)
 {
     bool foundAnySurface = false;
     PLCTSurfaceList* surfaces = new PLCTSurfaceList();
-    
+
+    int index = 0;
+    while (true)
+    {
+        PLCTSurface* surface = (PLCTSurface*) ScriptingObject::NewObject(baseInstance->GetTypeHandle());
+        if (!FindSurfaceAtIndex(surface, index++))
+        {
+            Delete(surface);
+            surface = nullptr;
+            break;
+        }
+
+        foundAnySurface = true;
+        surfaces->GetSurfaces().Add(surface);
+    }
+
+    return foundAnySurface ? surfaces : nullptr;
 }

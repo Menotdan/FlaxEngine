@@ -44,7 +44,7 @@ public:
         int iterationCount = 0;
         while (true)
         {
-            foundAnyPoint = foundAnyPoint || surface->SampleXZ(current, container);
+            foundAnyPoint = surface->SampleXZ(current, container) || foundAnyPoint;
             current += left * _settings.Spacing;
             if (!Check(volume, current))
             {
@@ -92,8 +92,10 @@ public:
 
         for (int surfIdx = 0; surfIdx < _surfaces.GetSurfaces().Count(); surfIdx++)
         {
-            foundAnyPoints = foundAnyPoints || SampleXZ(&_surfaces.GetSurfaces()[surfIdx], container);
+            foundAnyPoints = SampleXZ(_surfaces.GetSurfaces()[surfIdx], container) || foundAnyPoints;
         }
+
+        return foundAnyPoints ? container : nullptr;
     }
 
     API_FUNCTION() void Configure(SurfaceSamplerSettings& settings)

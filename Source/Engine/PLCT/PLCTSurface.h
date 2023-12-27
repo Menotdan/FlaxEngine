@@ -47,6 +47,7 @@ public:
     {
         return false;
     }
+    //
 
     /// <summary>
     /// Check that the passed actor matches the sample condition for this surface, and then sets it internally if it matches.
@@ -85,11 +86,11 @@ public:
     /// Get this array of surfaces.
     /// </summary>
     /// <returns>The surfaces array.</returns>
-    API_PROPERTY() Array<PLCTSurface>& GetSurfaces()
+    API_PROPERTY() Array<PLCTSurface*>& GetSurfaces()
     {
         return _surfaces;
     }
 
 private:
-    Array<PLCTSurface> _surfaces;
+    Array<PLCTSurface*> _surfaces;
 };
