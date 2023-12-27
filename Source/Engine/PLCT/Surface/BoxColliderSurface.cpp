@@ -59,7 +59,7 @@ PLCTPoint* BoxColliderSurface::SampleXZ(Vector2 xz)
     pointTransform.Translation = pointFound;
     pointTransform.Orientation = _actor->GetOrientation();
 
-    PLCTPoint* point = new PLCTPoint();
+    PLCTPoint* point = New<PLCTPoint>();
     point->SetTransform(pointTransform);
 
     return point;

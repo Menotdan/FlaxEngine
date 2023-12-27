@@ -19,9 +19,13 @@
 API_CLASS() class FLAXENGINE_API PLCTProperty : public ScriptingObject
 {
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTProperty, ScriptingObject);
-    ~PLCTProperty() = default;
 
 public:
+    ~PLCTProperty()
+    {
+        Data.DeleteValue();
+    }
+
     /// <summary>
     /// The name of the property. Used to reference it.
     /// </summary>
@@ -257,7 +261,10 @@ public:
 API_CLASS() class FLAXENGINE_API PLCTPropertyStorage : public ScriptingObject
 {
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTPropertyStorage, ScriptingObject);
-    ~PLCTPropertyStorage() = default;
+    ~PLCTPropertyStorage()
+    {
+        _properties.ClearDelete();
+    }
 public:
     /// <summary>
     /// Get the property associated with this name.
@@ -269,9 +276,9 @@ public:
         PLCTProperty *result = nullptr;
         for (int i = 0; i < _properties.Count(); i++)
         {
-            if (!_properties[i].Name.Compare(name))
+            if (!_properties[i]->Name.Compare(name))
             {
-                result = &_properties[i];
+                result = _properties[i];
                 break;
             }
         }
@@ -292,9 +299,9 @@ public:
             return result;
         }
 
-        PLCTProperty newProperty = PLCTProperty();
-        newProperty.Data = Variant(nullptr);
-        newProperty.Name = name;
+        PLCTProperty* newProperty = New<PLCTProperty>();
+        newProperty->Data = Variant(nullptr);
+        newProperty->Name = name;
         _properties.Add(newProperty);
 
         return result;
@@ -335,5 +342,5 @@ public:
     }
 
 private:
-    Array<PLCTProperty> _properties;
+    Array<PLCTProperty*> _properties;
 };

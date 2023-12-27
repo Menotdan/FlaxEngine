@@ -83,7 +83,7 @@ API_CLASS() class FLAXENGINE_API PLCTSurfaceList : public ScriptingObject
 
     ~PLCTSurfaceList()
     {
-        _surfaces.ClearDelete();
+        _surfaces.Clear();
     }
 
 public:
