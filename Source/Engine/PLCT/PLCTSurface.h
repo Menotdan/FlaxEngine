@@ -81,6 +81,11 @@ API_CLASS() class FLAXENGINE_API PLCTSurfaceList : public ScriptingObject
 {
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTSurfaceList, ScriptingObject);
 
+    ~PLCTSurfaceList()
+    {
+        _surfaces.ClearDelete();
+    }
+
 public:
     /// <summary>
     /// Get this array of surfaces.

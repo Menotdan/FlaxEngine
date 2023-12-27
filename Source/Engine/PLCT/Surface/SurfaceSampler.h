@@ -2,6 +2,7 @@
 
 #include "Engine/Scripting/ScriptingObject.h"
 #include "Engine/Scripting/ScriptingType.h"
+#include "Engine/Core/Config.h"
 #include "Engine/Level/Actors/PLCTVolume.h"
 #include "../PLCTSurface.h"
 #include "../PLCTPoint.h"
