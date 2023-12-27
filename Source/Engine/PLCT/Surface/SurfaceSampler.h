@@ -70,7 +70,7 @@ public:
     /// <returns>The points container, or null if no points were sampled.</returns>
     API_FUNCTION() virtual PLCTPointsContainer* SampleXZ(PLCTSurface* surface)
     {
-        PLCTPointsContainer* container = new PLCTPointsContainer();
+        PLCTPointsContainer* container = New<PLCTPointsContainer>();
         bool foundPoint = SampleXZ(surface, container);
 
         if (!foundPoint)
@@ -88,7 +88,7 @@ public:
     /// <returns>The points container, or null if no points were sampled.</returns>
     API_FUNCTION() virtual PLCTPointsContainer* SampleXZ()
     {
-        PLCTPointsContainer* container = new PLCTPointsContainer();
+        PLCTPointsContainer* container = New<PLCTPointsContainer>();
         bool foundAnyPoints = false;
 
         for (int surfIdx = 0; surfIdx < _surfaces.GetSurfaces().Count(); surfIdx++)

@@ -9,6 +9,8 @@ API_CLASS() class FLAXENGINE_API PLCTPoint : public ScriptingObject
 {
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTPoint, ScriptingObject);
 
+    ~PLCTPoint() = default;
+
 public:
     /// <summary>
     /// Gets the properties of the point.
@@ -52,6 +54,8 @@ private:
 API_CLASS() class FLAXENGINE_API PLCTPointsContainer : public ScriptingObject
 {
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTPointsContainer, ScriptingObject);
+
+    ~PLCTPointsContainer() = default;
 
 public:
     /// <summary>

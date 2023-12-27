@@ -37,7 +37,7 @@ struct Face
         Vector3 v2 = edge3 - edge1;
         Vector3 n = Vector3::Cross(v1, v2).GetNormalized();
 
-        return (1 / Math::Max(n.Y, 0.0001f)) * ((n.X * edge1.X) + (n.Y * edge1.Y) + (n.Z * edge1.Z) - (n.X * xz.X) - (n.Z * xz.Y));
+        return (1 / Math::Max((float) n.Y, 0.0001f)) * ((n.X * edge1.X) + (n.Y * edge1.Y) + (n.Z * edge1.Z) - (n.X * xz.X) - (n.Z * xz.Y));
     }
 };  
 

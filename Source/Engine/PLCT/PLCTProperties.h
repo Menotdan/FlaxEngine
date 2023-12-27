@@ -19,6 +19,7 @@
 API_CLASS() class FLAXENGINE_API PLCTProperty : public ScriptingObject
 {
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTProperty, ScriptingObject);
+    ~PLCTProperty() = default;
 
 public:
     /// <summary>
@@ -256,7 +257,7 @@ public:
 API_CLASS() class FLAXENGINE_API PLCTPropertyStorage : public ScriptingObject
 {
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTPropertyStorage, ScriptingObject);
-
+    ~PLCTPropertyStorage() = default;
 public:
     /// <summary>
     /// Get the property associated with this name.
