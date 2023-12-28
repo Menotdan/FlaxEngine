@@ -21,7 +21,6 @@
 REGISTER_BINARY_ASSET(PLCTGraph, "FlaxEngine.PLCTGraph", false);
 
 PLCTGraphNode::~PLCTGraphNode() {
-    LOG(Warning, "instance: {0}", (void*)Instance);
     SAFE_DELETE(Instance);
 }
 
@@ -69,14 +68,11 @@ void PLCTGraph::RunGeneration(PLCTVolume* volume)
     for (int i = 0; i < Graph.Nodes.Count(); i++)
     {
         LOG(Warning, "5");
-        PLCTGraphNode node = Graph.Nodes[i];
-        LOG(Warning, "run gen instance: {0}", (void*)node.Instance);
-        if (node.Instance && node.Instance->Is<PLCTNodeEnd>())
+        if (Graph.Nodes[i].Instance && Graph.Nodes[i].Instance->Is<PLCTNodeEnd>())
         {
             LOG(Warning, "6");
-            PLCTNodeEnd* graphEndNode = (PLCTNodeEnd*) node.Instance;
-            LOG(Warning, "execute instance: {0}", (void*)graphEndNode);
-            graphEndNode->Execute(node, volume);
+            PLCTNodeEnd* graphEndNode = (PLCTNodeEnd*)Graph.Nodes[i].Instance;
+            graphEndNode->Execute(Graph.Nodes[i], volume);
         }
     }
 }
@@ -202,6 +198,7 @@ void PLCTGraph::unload(bool isReloading)
 //#endif
 
     // Clear resources
+    LOG(Warning, "Clearing for unload: node size: {0}", Graph.Nodes.Count());
     Graph.Clear();
 }
 
