@@ -15,7 +15,7 @@ bool PLCTSampleSurface::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, in
             return false;
         
         Variant connectedOutput;
-        if (!connectedNode->Instance->GetOutputBox(node, volume, connectedBox->ID, connectedOutput))
+        if (!connectedNode->Instance->GetOutputBox(*connectedNode, volume, connectedBox->ID, connectedOutput))
             return false;
 
         ScriptingObject* object = connectedOutput.AsObject;
@@ -48,6 +48,7 @@ bool PLCTGetBoxColliderSurfaces::GetOutputBox(PLCTGraphNode& node, PLCTVolume* v
 
 bool PLCTDebugDrawPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
 {
+    LOG(Warning, "7");
     PLCTPointsContainer* points;
 
     VisjectGraphBox box = node.Boxes[0];
@@ -58,7 +59,7 @@ bool PLCTDebugDrawPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
         return false;
 
     Variant output;
-    if (!connectedNode->Instance->GetOutputBox(node, volume, connectedBox->ID, output))
+    if (!connectedNode->Instance->GetOutputBox(*connectedNode, volume, connectedBox->ID, output))
         return false;
 
     ScriptingObject* object = output.AsObject;

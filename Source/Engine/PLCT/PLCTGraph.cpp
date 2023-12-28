@@ -16,9 +16,12 @@
 #include "Engine/Level/Level.h"
 #endif
 
+#define IS_PLCT_NODE(n) (n.GroupID == 20)
+
 REGISTER_BINARY_ASSET(PLCTGraph, "FlaxEngine.PLCTGraph", false);
 
 PLCTGraphNode::~PLCTGraphNode() {
+    LOG(Warning, "instance: {0}", (void*)Instance);
     SAFE_DELETE(Instance);
 }
 
@@ -34,18 +37,45 @@ void VisjectPLCTGraph::Clear()
 
 bool VisjectPLCTGraph::onNodeLoaded(Node* n)
 {
-    return false;
+    const Node& node = *n;
+    if (IS_PLCT_NODE(node))
+    {
+        // Create node instance object
+        ScriptingTypeHandle type = Scripting::FindScriptingType((StringAnsiView)n->Values[0]);
+        if (!type)
+            type = Scripting::FindScriptingType(StringAnsi((StringView)n->Values[0]));
+        if (type)
+        {
+            n->Instance = (PLCTNode*)Scripting::NewObject(type);
+            LOG(Warning, "instance load: {0}", (void*)n->Instance);
+            const Variant& data = n->Values[1];
+            if (data.Type == VariantType::Blob)
+                JsonSerializer::LoadFromBytes(n->Instance, Span<byte>((byte*)data.AsBlob.Data, data.AsBlob.Length), FLAXENGINE_VERSION_BUILD);
+        }
+        else
+        {
+            const String name = n->Values[0].ToString();
+            if (name.HasChars())
+                LOG(Error, "Missing type '{0}'", name);
+        }
+    }
+
+    return VisjectGraph<PLCTGraphNode>::onNodeLoaded(n);
 }
 
 void PLCTGraph::RunGeneration(PLCTVolume* volume)
 {
-    Array<PLCTGraphNode> nodes = Graph.Nodes;
-    for (int i = 0; i < nodes.Count(); i++)
+    LOG(Warning, "4");
+    for (int i = 0; i < Graph.Nodes.Count(); i++)
     {
-        PLCTGraphNode node = nodes[i];
-        if (node.Instance->Is<PLCTNodeEnd>())
+        LOG(Warning, "5");
+        PLCTGraphNode node = Graph.Nodes[i];
+        LOG(Warning, "run gen instance: {0}", (void*)node.Instance);
+        if (node.Instance && node.Instance->Is<PLCTNodeEnd>())
         {
+            LOG(Warning, "6");
             PLCTNodeEnd* graphEndNode = (PLCTNodeEnd*) node.Instance;
+            LOG(Warning, "execute instance: {0}", (void*)graphEndNode);
             graphEndNode->Execute(node, volume);
         }
     }

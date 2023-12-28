@@ -517,6 +517,7 @@ public:
     /// </summary>
     virtual void Clear()
     {
+        LOG(Warning, "Clearing data..");
         Nodes.Resize(0);
         Parameters.Resize(0);
         Meta.Release();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BoxVolume.h"
+#include "Engine/Content/AssetReference.h"
 
 class PLCTSurface;
 class PLCTSurfaceList;
@@ -13,14 +14,16 @@ API_CLASS(Attributes = "ActorContextMenu(\"New/Other/PLCT Volume\"), ActorToolbo
 class FLAXENGINE_API PLCTVolume : public BoxVolume
 {
     DECLARE_SCENE_OBJECT(PLCTVolume);
+    API_AUTO_SERIALIZATION();
 
     /// <summary>
     /// The graph that gets executed when this volume is set to generate.
     /// </summary>
-    API_FIELD() PLCTGraph* Graph;
+    API_FIELD(Attributes = "DefaultValue(null), EditorDisplay(\"PLCT Graph\")")
+    AssetReference<PLCTGraph> Graph;
 
     /// <summary>
-    /// Generate using this volume
+    /// Generate using this volume.
     /// </summary>
     /// <returns>True if generation succeeded, otherwise false.</returns>
     API_FUNCTION() bool Generate();

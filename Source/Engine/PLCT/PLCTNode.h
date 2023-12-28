@@ -17,6 +17,8 @@ API_CLASS(Abstract) class FLAXENGINE_API PLCTNode : public SerializableScripting
     friend class PLCTGraph;
 
 public:
+    ~PLCTNode() = default;
+
     virtual bool GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output)
     {
         output = Variant(nullptr);
