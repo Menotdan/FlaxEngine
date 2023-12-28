@@ -51,7 +51,6 @@ bool PLCTVolume::FindSurfaceAtIndex(PLCTSurface* surface, int index)
 
 bool PLCTVolume::Generate()
 {
-    LOG(Warning, "1");
     if (!(Graph && !Graph->WaitForLoaded()))
     {
         LOG(Warning, "Graph failed to load on PLCT volume!");
@@ -59,9 +58,7 @@ bool PLCTVolume::Generate()
     }
 
     PLCTGraph* graph = Graph.Get();
-    LOG(Warning, "2");
     graph->RunGeneration(this);
-    LOG(Warning, "3");
     return false;
 }
 

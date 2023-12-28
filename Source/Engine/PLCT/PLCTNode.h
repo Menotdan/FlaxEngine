@@ -40,6 +40,20 @@ public:
         outConnectedNode = outConnectedBox->GetParent<PLCTGraphNode>();
         return true;
     }
+
+    bool GetObjectFromInputBox(VisjectGraphBox box, PLCTGraphNode*& outConnectedNode, PLCTVolume* volume, ScriptingObject*& objectOut)
+    {
+        VisjectGraphBox* connectedBox;
+        if (!GetInputBox(box, outConnectedNode, connectedBox))
+            return false;
+
+        Variant output;
+        if (!outConnectedNode->Instance->GetOutputBox(*outConnectedNode, volume, connectedBox->ID, output))
+            return false;
+
+        objectOut = output.AsObject;
+        return true;
+    }
 };
 
 API_CLASS(Abstract) class FLAXENGINE_API PLCTNodeEnd : public PLCTNode

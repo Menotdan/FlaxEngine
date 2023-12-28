@@ -163,7 +163,6 @@ public:
     /// <returns>True if cannot load data, otherwise false</returns>
     virtual bool Load(ReadStream* stream, bool loadMeta)
     {
-        LOG(Warning, "Clearing for Load: node size: {0}", Nodes.Count());
         // Clear previous data
         Clear();
 

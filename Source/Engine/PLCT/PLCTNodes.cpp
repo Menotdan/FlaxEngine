@@ -1,5 +1,6 @@
 #include "PLCTNodes.h"
 #include "Surface/BoxColliderSurface.h"
+#include "Engine/Debug/DebugDraw.h"
 
 bool PLCTSampleSurface::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output)
 {
@@ -8,17 +9,12 @@ bool PLCTSampleSurface::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, in
         PLCTSurfaceList* surfaces;
 
         VisjectGraphBox box = node.Boxes[0];
-        VisjectGraphBox* connectedBox;
         PLCTGraphNode* connectedNode;
+        ScriptingObject* object;
 
-        if (!GetInputBox(box, connectedNode, connectedBox))
-            return false;
-        
-        Variant connectedOutput;
-        if (!connectedNode->Instance->GetOutputBox(*connectedNode, volume, connectedBox->ID, connectedOutput))
+        if (!GetObjectFromInputBox(box, connectedNode, volume, object))
             return false;
 
-        ScriptingObject* object = connectedOutput.AsObject;
         if (!object->Is<PLCTSurfaceList>())
             return false;
 
@@ -48,28 +44,22 @@ bool PLCTGetBoxColliderSurfaces::GetOutputBox(PLCTGraphNode& node, PLCTVolume* v
 
 bool PLCTDebugDrawPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
 {
-    LOG(Warning, "7");
     PLCTPointsContainer* points;
 
     VisjectGraphBox box = node.Boxes[0];
-    VisjectGraphBox* connectedBox;
     PLCTGraphNode* connectedNode;
+    ScriptingObject* object;
 
-    if (!GetInputBox(box, connectedNode, connectedBox))
+    if (!GetObjectFromInputBox(box, connectedNode, volume, object))
         return false;
 
-    Variant output;
-    if (!connectedNode->Instance->GetOutputBox(*connectedNode, volume, connectedBox->ID, output))
-        return false;
-
-    ScriptingObject* object = output.AsObject;
     if (!object->Is<PLCTPointsContainer>())
         return false;
 
     points = (PLCTPointsContainer*) object;
     for (int i = 0; i < points->GetPoints().Count(); i++)
     {
-        LOG(Warning, "point: {0}", points->GetPoints()[i]->GetTransform());
+        DebugDraw::DrawSphere(BoundingSphere(points->GetPoints()[i]->GetTransform().Translation, 2), PointColor, 20.0f);
     }
 
     return true;

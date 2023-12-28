@@ -46,7 +46,6 @@ bool VisjectPLCTGraph::onNodeLoaded(Node* n)
         if (type)
         {
             n->Instance = (PLCTNode*)Scripting::NewObject(type);
-            LOG(Warning, "instance load: {0}", (void*)n->Instance);
             const Variant& data = n->Values[1];
             if (data.Type == VariantType::Blob)
                 JsonSerializer::LoadFromBytes(n->Instance, Span<byte>((byte*)data.AsBlob.Data, data.AsBlob.Length), FLAXENGINE_VERSION_BUILD);
@@ -64,13 +63,10 @@ bool VisjectPLCTGraph::onNodeLoaded(Node* n)
 
 void PLCTGraph::RunGeneration(PLCTVolume* volume)
 {
-    LOG(Warning, "4");
     for (int i = 0; i < Graph.Nodes.Count(); i++)
     {
-        LOG(Warning, "5");
         if (Graph.Nodes[i].Instance && Graph.Nodes[i].Instance->Is<PLCTNodeEnd>())
         {
-            LOG(Warning, "6");
             PLCTNodeEnd* graphEndNode = (PLCTNodeEnd*)Graph.Nodes[i].Instance;
             graphEndNode->Execute(Graph.Nodes[i], volume);
         }
@@ -198,7 +194,6 @@ void PLCTGraph::unload(bool isReloading)
 //#endif
 
     // Clear resources
-    LOG(Warning, "Clearing for unload: node size: {0}", Graph.Nodes.Count());
     Graph.Clear();
 }
 
