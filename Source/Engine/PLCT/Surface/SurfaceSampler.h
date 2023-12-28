@@ -1,17 +1,23 @@
 #pragma once
 
 #include "Engine/Scripting/ScriptingObject.h"
+#include "Engine/Scripting/SerializableScriptingObject.h"
 #include "Engine/Scripting/ScriptingType.h"
 #include "Engine/Core/Config.h"
 #include "Engine/Level/Actors/PLCTVolume.h"
 #include "../PLCTSurface.h"
 #include "../PLCTPoint.h"
 
-API_STRUCT() struct SurfaceSamplerSettings
+API_STRUCT() struct FLAXENGINE_API SurfaceSamplerSettings : ISerializable
 {
-    DECLARE_SCRIPTING_TYPE_MINIMAL(SurfaceSamplerSettings)
+    API_AUTO_SERIALIZATION();
+    DECLARE_SCRIPTING_TYPE_NO_SPAWN(SurfaceSamplerSettings);
 
-    API_FIELD() float Spacing = 10;
+    /// <summary>
+    /// The spacing between each point that gets sampled.
+    /// </summary>
+    API_FIELD()
+    float Spacing = 10;
 };
 
 /// <summary>

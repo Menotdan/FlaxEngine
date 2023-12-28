@@ -1,6 +1,7 @@
 #include "PLCTGraph.h"
 #include "Engine/Content/Factories/BinaryAssetFactory.h"
 #include "Engine/Content/BinaryAsset.h"
+#include "Engine/Level/Actors/PLCTVolume.h"
 #include "Engine/Serialization/MemoryReadStream.h"
 
 #include "Engine/Content/JsonAsset.h"
@@ -8,6 +9,8 @@
 #include "Engine/Serialization/JsonSerializer.h"
 #include "Engine/Threading/Threading.h"
 #include "FlaxEngine.Gen.h"
+
+#include "PLCTNode.h"
 
 #if USE_EDITOR
 #include "Engine/Level/Level.h"
@@ -32,6 +35,20 @@ void VisjectPLCTGraph::Clear()
 bool VisjectPLCTGraph::onNodeLoaded(Node* n)
 {
     return false;
+}
+
+void PLCTGraph::RunGeneration(PLCTVolume* volume)
+{
+    Array<PLCTGraphNode> nodes = Graph.Nodes;
+    for (int i = 0; i < nodes.Count(); i++)
+    {
+        PLCTGraphNode node = nodes[i];
+        if (node.Instance->Is<PLCTNodeEnd>())
+        {
+            PLCTNodeEnd* graphEndNode = (PLCTNodeEnd*) node.Instance;
+            graphEndNode->Execute(node, volume);
+        }
+    }
 }
 
 BytesContainer PLCTGraph::LoadSurface()

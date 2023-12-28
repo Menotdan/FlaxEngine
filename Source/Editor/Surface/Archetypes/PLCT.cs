@@ -224,7 +224,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Create = Node.Create,
                 Flags = NodeFlags.PLCTGraph | NodeFlags.NoSpawnViaGUI,
-                Title = "PLCT Node Surface Input",
+                Title = "PLCT Node Get Surfaces",
                 DefaultValues = new object[]
                 {
                     string.Empty, // Type Name
@@ -233,7 +233,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Float2(100, 100),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Output(0, "Surface", new ScriptType(typeof(PLCTSurface)), 0),
+                    NodeElementArchetype.Factory.Output(0, "Surfaces", new ScriptType(typeof(PLCTSurfaceList)), 0),
                 }
             },
             new NodeArchetype
@@ -250,7 +250,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Float2(100, 100),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "Surface", true, new ScriptType(typeof(PLCTSurface)), 0),
+                    NodeElementArchetype.Factory.Input(0, "Surfaces", true, new ScriptType(typeof(PLCTSurfaceList)), 0),
                 }
             },
             new NodeArchetype
@@ -258,7 +258,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Create = Node.Create,
                 Flags = NodeFlags.PLCTGraph | NodeFlags.NoSpawnViaGUI,
-                Title = "PLCT Node Surface Input Points Output",
+                Title = "PLCT SurfaceSample",
                 DefaultValues = new object[]
                 {
                     string.Empty, // Type Name
@@ -267,8 +267,25 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Float2(100, 100),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "Surface", true, new ScriptType(typeof(PLCTSurface)), 0),
-                    NodeElementArchetype.Factory.Output(0, "Points", new ScriptType(typeof(PLCTSurface)), 1),
+                    NodeElementArchetype.Factory.Input(0, "Surfaces", true, new ScriptType(typeof(PLCTSurfaceList)), 0),
+                    NodeElementArchetype.Factory.Output(0, "Points", new ScriptType(typeof(PLCTPointsContainer)), 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 4,
+                Create = Node.Create,
+                Flags = NodeFlags.PLCTGraph | NodeFlags.NoSpawnViaGUI,
+                Title = "PLCT Points Output",
+                DefaultValues = new object[]
+                {
+                    string.Empty, // Type Name
+                    Utils.GetEmptyArray<byte>(), // Instance Data
+                },
+                Size = new Float2(100, 100),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Points", true, new ScriptType(typeof(PLCTPointsContainer)), 0),
                 }
             },
         };

@@ -4,6 +4,7 @@
 #include "Engine/Level/Actor.h"
 #include "Engine/Level/Level.h"
 #include "Engine/PLCT/PLCTSurface.h"
+#include "Engine/PLCT/PLCTGraph.h"
 #include <typeinfo>
 
 PLCTVolume::PLCTVolume(const SpawnParams& params)
@@ -45,6 +46,15 @@ bool PLCTVolume::FindSurfaceAtIndex(PLCTSurface* surface, int index)
         }
     }
 
+    return false;
+}
+
+bool PLCTVolume::Generate()
+{
+    if (!Graph)
+        return false;
+
+    Graph->RunGeneration(this);
     return false;
 }
 

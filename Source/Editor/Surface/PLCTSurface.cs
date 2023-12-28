@@ -65,7 +65,7 @@ namespace FlaxEditor.Surface
                 return;
 
             // Skip in-built types
-            if (scriptType == typeof(PLCTNode))
+            if (scriptType == typeof(PLCTNode) || scriptType == typeof(PLCTNodeEnd))
                 return;
 
             // Create group archetype

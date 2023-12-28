@@ -2,9 +2,9 @@
 
 #include "Engine/Content/BinaryAsset.h"
 #include "Engine/Visject/VisjectGraph.h"
-#include "PLCTNode.h"
 
 class PLCTNode;
+class PLCTVolume;
 
 /// <summary>
 /// PLCT Graph Node.
@@ -39,6 +39,11 @@ API_CLASS(NoSpawn, Sealed) class FLAXENGINE_API PLCTGraph : public BinaryAsset {
 
 public:
     VisjectPLCTGraph Graph;
+
+    /// <summary>
+    /// Execute this graph.
+    /// </summary>
+    API_FUNCTION() void RunGeneration(PLCTVolume* volume);
 
     /// <summary>
     /// Tries to load surface graph from the asset.

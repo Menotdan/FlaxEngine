@@ -4,6 +4,7 @@
 
 class PLCTSurface;
 class PLCTSurfaceList;
+class PLCTGraph;
 
 /// <summary>
 /// PLCT Volume.
@@ -12,6 +13,17 @@ API_CLASS(Attributes = "ActorContextMenu(\"New/Other/PLCT Volume\"), ActorToolbo
 class FLAXENGINE_API PLCTVolume : public BoxVolume
 {
     DECLARE_SCENE_OBJECT(PLCTVolume);
+
+    /// <summary>
+    /// The graph that gets executed when this volume is set to generate.
+    /// </summary>
+    API_FIELD() PLCTGraph* Graph;
+
+    /// <summary>
+    /// Generate using this volume
+    /// </summary>
+    /// <returns>True if generation succeeded, otherwise false.</returns>
+    API_FUNCTION() bool Generate();
 
     /// <summary>
     /// Finds the first surface of the surface instance type, and then reads that data into the given surface object.
