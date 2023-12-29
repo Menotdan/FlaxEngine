@@ -29,6 +29,7 @@ bool PLCTSampleSurface::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, in
     if (!GetObjectFromInputBox(box, connectedNode, volume, object))
         return false;
 
+    CHECK_RETURN(object, false);
     if (!object->Is<PLCTSurfaceList>())
         return false;
 
@@ -40,7 +41,7 @@ bool PLCTSampleSurface::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, in
     PLCTPointsContainer* points = sampler->SampleXZ();
     Delete(sampler);
 
-    Arch2RuntimeCache* cache = new Arch2RuntimeCache();
+    Arch2RuntimeCache* cache = New<Arch2RuntimeCache>();
     cache->Points = points;
     volume->RuntimeCache->SetPropertyValue(GetID().ToString(), Variant(cache));
 
@@ -61,9 +62,23 @@ bool PLCTGetBoxColliderSurfaces::GetOutputBox(PLCTGraphNode& node, PLCTVolume* v
 
     BoxColliderSurface* baseInstance = New<BoxColliderSurface>();
     PLCTSurfaceList* surfaces = volume->FindAllSurfaces(baseInstance);
+    if (surfaces == nullptr)
+    {
+        Delete(baseInstance);
+        output = Variant(nullptr);
+        return false;
+    }
+
+    if (surfaces->GetSurfaces().Count() == 0)
+    {
+        Delete(surfaces);
+        Delete(baseInstance);
+        output = Variant(nullptr);
+        return false;
+    }
     Delete(baseInstance);
 
-    Arch0RuntimeCache* cache = new Arch0RuntimeCache();
+    Arch0RuntimeCache* cache = New<Arch0RuntimeCache>();
     cache->SurfaceList = surfaces;
     volume->RuntimeCache->SetPropertyValue(GetID().ToString(), Variant(cache));
 
@@ -83,9 +98,10 @@ bool PLCTGetTerrainSurfaces::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volum
 
     TerrainSurface* baseInstance = New<TerrainSurface>();
     PLCTSurfaceList* surfaces = volume->FindAllSurfaces(baseInstance);
+    CHECK_RETURN(surfaces, false);
     Delete(baseInstance);
 
-    Arch0RuntimeCache* cache = new Arch0RuntimeCache();
+    Arch0RuntimeCache* cache = New<Arch0RuntimeCache>();
     cache->SurfaceList = surfaces;
     volume->RuntimeCache->SetPropertyValue(GetID().ToString(), Variant(cache));
 
@@ -99,9 +115,11 @@ bool GetPoints(VisjectGraphBox box, PLCTNode* node, PLCTVolume* volume, PLCTPoin
     PLCTGraphNode* connectedNode;
     ScriptingObject* object;
 
+    CHECK_RETURN(node, false);
     if (!node->GetObjectFromInputBox(box, connectedNode, volume, object))
         return false;
 
+    CHECK_RETURN(object, false);
     if (!object->Is<PLCTPointsContainer>())
         return false;
 
@@ -118,6 +136,7 @@ bool PLCTDebugDrawPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
     if (!GetPoints(box, this, volume, points))
         return false;
 
+    CHECK_RETURN(points, false);
     for (int i = 0; i < points->GetPoints().Count(); i++)
     {
 #if USE_EDITOR
@@ -139,6 +158,8 @@ bool PLCTSpawnPrefabAtPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
 
     RandomStream stream = RandomStream();
     stream.GenerateNewSeed();
+
+    CHECK_RETURN(points, false);
     for (int pointIdx = 0; pointIdx < points->GetPoints().Count(); pointIdx++)
     {
         float pickedPrefabNum = stream.GetFraction();
@@ -184,9 +205,12 @@ bool PLCTFilterByRandom::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, i
         return false;
 
     PLCTPointsContainer* filteredPoints = New<PLCTPointsContainer>();
+
+    CHECK_RETURN(points, false);
     for (int pointIdx = 0; pointIdx < points->GetPoints().Count(); pointIdx++)
     {
         PLCTPoint* point = points->GetPoints()[pointIdx];
+        CHECK_RETURN(point, false);
         Variant randomValue = point->GetProperties()->GetPropertyValue(TEXT("Random"));
         if (randomValue.Type == VariantType::Null)
             continue;
@@ -202,7 +226,7 @@ bool PLCTFilterByRandom::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, i
         filteredPoints->GetPoints().Add(filteredPoint);
     }
 
-    Arch2RuntimeCache* cache = new Arch2RuntimeCache();
+    Arch2RuntimeCache* cache = New<Arch2RuntimeCache>();
     cache->Points = filteredPoints;
     volume->RuntimeCache->SetPropertyValue(GetID().ToString(), Variant(cache));
 

@@ -13,6 +13,8 @@ bool PointInsdeTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Vector2 p)
 
 PLCTPoint* TerrainSurface::SampleXZ(Vector2 coordinates)
 {
+    CHECK_RETURN(_actor, nullptr);
+
     int32 patchesCount = _actor->GetPatchesCount();
     TerrainPatch* patch = nullptr;
     for (int i = 0; i < patchesCount; i++)
@@ -31,6 +33,8 @@ PLCTPoint* TerrainSurface::SampleXZ(Vector2 coordinates)
         return nullptr;
 
     const Array<Vector3>* triangles = &patch->GetCollisionTriangles();
+    CHECK_RETURN(triangles, nullptr);
+
     int triangleCount = triangles->Count() / 3;
     for (int i = 0; i < triangleCount; i++)
     {
@@ -62,6 +66,7 @@ PLCTPoint* TerrainSurface::SampleXZ(Vector2 coordinates)
 
 bool TerrainSurface::SampleXZ(Vector2 coordinates, PLCTPointsContainer* targetContainer)
 {
+    CHECK_RETURN(targetContainer, false);
     PLCTPoint* point = SampleXZ(coordinates);
     if (point == nullptr)
     {
@@ -74,6 +79,7 @@ bool TerrainSurface::SampleXZ(Vector2 coordinates, PLCTPointsContainer* targetCo
 
 bool TerrainSurface::CheckActorMatchesAndSet(Actor* actor)
 {
+    CHECK_RETURN(actor, false);
     if (actor->Is<Terrain>())
     {
         _actor = (Terrain*)actor;

@@ -39,7 +39,12 @@ public:
     /// <returns>True if any points were sampled, otherwise false.</returns>
     API_FUNCTION() virtual bool SampleXZ(PLCTSurface* surface, PLCTPointsContainer* container)
     {
+        CHECK_RETURN(surface, false);
+        CHECK_RETURN(container, false);
+
         PLCTVolume* volume = surface->GetVolume();
+
+        CHECK_RETURN(volume, false);
         OrientedBoundingBox box = volume->GetOrientedBox();
         Vector2 start = Vector2(box.GetCenter().X, box.GetCenter().Z) + Vector2(box.Extents.X, box.Extents.Z);
         bool foundAnyPoint = false;
@@ -63,6 +68,8 @@ public:
             if (found)
             {
                 PLCTPoint* point = container->GetPoints()[container->GetPoints().Count() - 1];
+
+                CHECK_RETURN(point, false);
                 point->GetProperties()->EnsureProperty(TEXT("Random"));
                 point->GetProperties()->SetPropertyValue(TEXT("Random"), Variant(stream.GetFraction()));
             }
@@ -144,6 +151,7 @@ public:
 private:
     bool Check(PLCTVolume* volume, Vector2& point)
     {
+        CHECK_RETURN(volume, false);
         return volume->GetOrientedBox().Contains(Vector3(point.X, volume->GetPosition().Y, point.Y)) == ContainmentType::Contains;
     }
 

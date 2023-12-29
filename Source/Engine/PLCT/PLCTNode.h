@@ -37,7 +37,10 @@ public:
             return false;
 
         outConnectedBox = box.FirstConnection();
+        CHECK_RETURN(outConnectedBox, false);
         outConnectedNode = outConnectedBox->GetParent<PLCTGraphNode>();
+        CHECK_RETURN(outConnectedNode, false);
+
         return true;
     }
 
@@ -49,6 +52,9 @@ public:
 
         Variant output;
         if (!outConnectedNode->Instance->GetOutputBox(*outConnectedNode, volume, connectedBox->ID, output))
+            return false;
+
+        if (!output.AsObject)
             return false;
 
         objectOut = output.AsObject;

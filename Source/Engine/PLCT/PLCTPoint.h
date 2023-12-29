@@ -40,6 +40,7 @@ public:
         PLCTProperty* transformProperty = _properties.GetProperty(TEXT("Transform"));
 
         Transform transform = Transform::Identity;
+        CHECK_RETURN(transformProperty, transform);
         transformProperty->GetTransform(transform);
         return transform;
     }

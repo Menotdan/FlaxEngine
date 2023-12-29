@@ -276,6 +276,7 @@ public:
         PLCTProperty *result = nullptr;
         for (int i = 0; i < _properties.Count(); i++)
         {
+            CHECK_RETURN(_properties[i], nullptr);
             if (!_properties[i]->Name.Compare(name))
             {
                 result = _properties[i];

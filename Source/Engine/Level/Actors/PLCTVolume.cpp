@@ -15,6 +15,7 @@ PLCTVolume::PLCTVolume(const SpawnParams& params)
 
 bool PLCTVolume::FindSurfaceAtIndex(PLCTSurface* surface, int index)
 {
+    CHECK_RETURN(surface, false);
     int foundCounter = 0;
     for (int sceneIdx = -1; sceneIdx < Level::Scenes.Count(); sceneIdx++)
     {
@@ -59,8 +60,11 @@ bool PLCTVolume::Generate()
 
     RuntimeCache = New<PLCTPropertyStorage>();
     PLCTGraph* graph = Graph.Get();
+
+    CHECK_RETURN(graph, false);
     graph->RunGeneration(this);
 
+    CHECK_RETURN(RuntimeCache, false);
     RuntimeCache->DeleteObjectNow();
     RuntimeCache = nullptr;
 
@@ -76,6 +80,8 @@ PLCTSurfaceList* PLCTVolume::FindAllSurfaces(PLCTSurface* baseInstance)
 {
     bool foundAnySurface = false;
     PLCTSurfaceList* surfaces = new PLCTSurfaceList();
+
+    CHECK_RETURN(baseInstance, nullptr);
 
     int index = 0;
     while (true)

@@ -24,6 +24,7 @@ PLCTPoint* BoxColliderSurface::SampleXZ(Vector2 xz)
         { corners[3], corners[2], corners[6], corners[7] }, // right
     };
 
+    CHECK_RETURN(GetVolume(), nullptr);
     float highestY = 0;
     bool foundAny = false;
     for (int face = 0; face < 6; face++)
@@ -73,12 +74,14 @@ bool BoxColliderSurface::SampleXZ(Vector2 coordinates, PLCTPointsContainer* targ
         return false;
     }
 
+    CHECK_RETURN(targetContainer, false);
     targetContainer->GetPoints().Add(point);
     return true;
 }
 
 bool BoxColliderSurface::CheckActorMatchesAndSet(Actor* actor)
 {
+    CHECK_RETURN(actor, false);
     if (actor->Is<BoxCollider>())
     {
         _actor = (BoxCollider*) actor;
