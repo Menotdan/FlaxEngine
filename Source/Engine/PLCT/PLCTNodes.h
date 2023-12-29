@@ -66,3 +66,41 @@ public:
     // [PLCTNodeEnd]
     bool Execute(PLCTGraphNode& node, PLCTVolume* volume) override;
 };
+
+API_STRUCT() struct FLAXENGINE_API PrefabSpawnEntry : ISerializable
+{
+    DECLARE_SCRIPTING_TYPE_MINIMAL(PrefabSpawnEntry)
+    API_AUTO_SERIALIZATION();
+
+    /// <summary>
+    /// The weight of this entry, from 0.0 to 1.0. If the total weight of all entries is greater than 1.0, entries that start past 1.0 will never spawn.
+    /// </summary>
+    API_FIELD() float Weight;
+
+    /// <summary>
+    /// The prefab to spawn. Can be set empty to spawn nothing.
+    /// </summary>
+    API_FIELD() AssetReference<Prefab> Prefab;
+};
+
+/// <summary>
+/// Takes a list of points and spawns a prefab at each point.
+/// </summary>
+API_CLASS(Sealed) class FLAXENGINE_API PLCTSpawnPrefabAtPoints : public PLCTNodeEnd
+{
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTSpawnPrefabAtPoints, PLCTNodeEnd);
+    API_AUTO_SERIALIZATION();
+
+public:
+    API_PROPERTY() FORCE_INLINE int NodeArchetypeIndex() const override
+    {
+        return 3;
+    }
+
+    API_FIELD(Attributes = "EditorOrder(10)")
+    Array<PrefabSpawnEntry> Prefabs;
+
+public:
+    // [PLCTNodeEnd]
+    bool Execute(PLCTGraphNode& node, PLCTVolume* volume) override;
+};
