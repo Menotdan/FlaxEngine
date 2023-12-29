@@ -7,6 +7,7 @@
 
 #include "PLCTProperties.h"
 #include "Surface/BoxColliderSurface.h"
+#include "Surface/TerrainSurface.h"
 
 bool PLCTSampleSurface::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output)
 {
@@ -69,6 +70,29 @@ bool PLCTGetBoxColliderSurfaces::GetOutputBox(PLCTGraphNode& node, PLCTVolume* v
     output = Variant(surfaces);
     return true;
 }
+
+bool PLCTGetTerrainSurfaces::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output)
+{
+    Variant Cached = volume->RuntimeCache->GetPropertyValue(GetID().ToString());
+    if (!(Cached.Type == VariantType::Null))
+    {
+        Arch0RuntimeCache* cache = (Arch0RuntimeCache*)Cached.AsPointer;
+        output = Variant(cache->SurfaceList);
+        return true;
+    }
+
+    TerrainSurface* baseInstance = New<TerrainSurface>();
+    PLCTSurfaceList* surfaces = volume->FindAllSurfaces(baseInstance);
+    Delete(baseInstance);
+
+    Arch0RuntimeCache* cache = new Arch0RuntimeCache();
+    cache->SurfaceList = surfaces;
+    volume->RuntimeCache->SetPropertyValue(GetID().ToString(), Variant(cache));
+
+    output = Variant(surfaces);
+    return true;
+}
+
 
 bool GetPoints(VisjectGraphBox box, PLCTNode* node, PLCTVolume* volume, PLCTPointsContainer*& outPoints)
 {

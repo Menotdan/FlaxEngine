@@ -24,6 +24,25 @@ public:
 };
 
 /// <summary>
+/// Gets all terrain surfaces found in the PLCT volume.
+/// </summary>
+API_CLASS(Sealed) class FLAXENGINE_API PLCTGetTerrainSurfaces : public PLCTNode
+{
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTGetTerrainSurfaces, PLCTNode);
+    API_AUTO_SERIALIZATION();
+
+public:
+    API_PROPERTY() FORCE_INLINE int NodeArchetypeIndex() const override
+    {
+        return 0;
+    }
+
+public:
+    // [PLCTNode]
+    bool GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output) override;
+};
+
+/// <summary>
 /// Samples a PLCT surface, generating points.
 /// </summary>
 API_CLASS(Sealed) class FLAXENGINE_API PLCTSampleSurface : public PLCTNode
