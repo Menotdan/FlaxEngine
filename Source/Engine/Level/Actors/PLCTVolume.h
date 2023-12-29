@@ -2,6 +2,8 @@
 
 #include "BoxVolume.h"
 #include "Engine/Content/AssetReference.h"
+#include "Engine/Scripting/ScriptingObjectReference.h"
+#include "Engine/PLCT/PLCTProperties.h"
 
 class PLCTSurface;
 class PLCTSurfaceList;
@@ -16,11 +18,18 @@ class FLAXENGINE_API PLCTVolume : public BoxVolume
     DECLARE_SCENE_OBJECT(PLCTVolume);
     API_AUTO_SERIALIZATION();
 
+public:
     /// <summary>
     /// The graph that gets executed when this volume is set to generate.
     /// </summary>
     API_FIELD(Attributes = "DefaultValue(null), EditorDisplay(\"PLCT Graph\")")
     AssetReference<PLCTGraph> Graph;
+
+    /// <summary>
+    /// The actor that this volume will generate into.
+    /// </summary>
+    API_FIELD(Attributes = "DefaultValue(null), EditorDisplay(\"PLCT Generation Container\")")
+    ScriptingObjectReference<EmptyActor> GenerationContainer;
 
     /// <summary>
     /// Generate using this volume.
@@ -49,4 +58,6 @@ class FLAXENGINE_API PLCTVolume : public BoxVolume
     /// <param name="index">The index of surface to search for.</param>
     /// <returns>True if found matching surface, otherwise false.</returns>
     API_FUNCTION() bool FindSurfaceAtIndex(PLCTSurface* surface, int index);
+
+    PLCTPropertyStorage* RuntimeCache;
 };

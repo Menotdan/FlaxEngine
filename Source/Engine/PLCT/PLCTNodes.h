@@ -104,3 +104,52 @@ public:
     // [PLCTNodeEnd]
     bool Execute(PLCTGraphNode& node, PLCTVolume* volume) override;
 };
+
+/// <summary>
+/// Samples a PLCT surface, generating points.
+/// </summary>
+API_CLASS(Sealed) class FLAXENGINE_API PLCTFilterByRandom : public PLCTNode
+{
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTFilterByRandom, PLCTNode);
+    API_AUTO_SERIALIZATION();
+
+public:
+    API_FIELD(Attributes = "EditorOrder(10)")
+    float MinValue;
+
+    API_FIELD(Attributes = "EditorOrder(20)")
+    float MaxValue;
+
+    API_PROPERTY() FORCE_INLINE int NodeArchetypeIndex() const override
+    {
+        return 4;
+    }
+
+public:
+    // [PLCTNode]
+    bool GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output) override;
+};
+
+/* Node Runtime Cache Types */
+/* This allows nodes to save their output once it runs. */
+
+/// <summary>
+/// Single surface list output cache.
+/// </summary>
+API_STRUCT() struct FLAXENGINE_API Arch0RuntimeCache
+{
+    DECLARE_SCRIPTING_TYPE_MINIMAL(Arch0RuntimeCache)
+
+    PLCTSurfaceList* SurfaceList;
+};
+
+/// <summary>
+/// Single points output cache.
+/// </summary>
+API_STRUCT() struct FLAXENGINE_API Arch2RuntimeCache
+{
+    DECLARE_SCRIPTING_TYPE_MINIMAL(Arch2RuntimeCache)
+
+    PLCTPointsContainer* Points;
+};
+

@@ -288,6 +288,24 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(0, "Points", true, new ScriptType(typeof(PLCTPointsContainer)), 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 5,
+                Create = Node.Create,
+                Flags = NodeFlags.PLCTGraph | NodeFlags.NoSpawnViaGUI,
+                Title = "PLCT Points Input and Output",
+                DefaultValues = new object[]
+                {
+                    string.Empty, // Type Name
+                    Utils.GetEmptyArray<byte>(), // Instance Data
+                },
+                Size = new Float2(100, 100),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Points", true, new ScriptType(typeof(PLCTPointsContainer)), 0),
+                    NodeElementArchetype.Factory.Output(0, "Points", new ScriptType(typeof(PLCTPointsContainer)), 1),
+                }
+            },
         };
     }
 }

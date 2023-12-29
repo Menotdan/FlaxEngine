@@ -293,10 +293,10 @@ public:
     /// <returns>The property, which has either been created or read from the list.</returns>
     API_FUNCTION() FORCE_INLINE PLCTProperty* EnsureProperty(String name)
     {
-        PLCTProperty* result = GetProperty(name);
-        if (result != nullptr)
+        PLCTProperty* earlyResult = GetProperty(name);
+        if (earlyResult != nullptr)
         {
-            return result;
+            return earlyResult;
         }
 
         PLCTProperty* newProperty = New<PLCTProperty>();
@@ -304,7 +304,7 @@ public:
         newProperty->Name = name;
         _properties.Add(newProperty);
 
-        return result;
+        return newProperty;
     }
 
     /// <summary>
@@ -331,13 +331,9 @@ public:
     /// <returns>A bool indicating if the property was set.</returns>
     API_FUNCTION() FORCE_INLINE bool SetPropertyValue(String name, Variant value)
     {
-        PLCTProperty* property = GetProperty(name);
-        if (property == nullptr)
-        {
-            return false;
-        }
-
+        PLCTProperty* property = EnsureProperty(name);
         property->SetValue(value);
+
         return true;
     }
 

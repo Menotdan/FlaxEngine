@@ -57,9 +57,14 @@ bool PLCTVolume::Generate()
         return false;
     }
 
+    RuntimeCache = New<PLCTPropertyStorage>();
     PLCTGraph* graph = Graph.Get();
     graph->RunGeneration(this);
-    return false;
+
+    RuntimeCache->DeleteObjectNow();
+    RuntimeCache = nullptr;
+
+    return true;
 }
 
 bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)

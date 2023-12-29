@@ -4,6 +4,7 @@
 #include "Engine/Scripting/SerializableScriptingObject.h"
 #include "Engine/Scripting/ScriptingType.h"
 #include "Engine/Core/Config.h"
+#include "Engine/Core/RandomStream.h"
 #include "Engine/Level/Actors/PLCTVolume.h"
 #include "../PLCTSurface.h"
 #include "../PLCTPoint.h"
@@ -50,10 +51,22 @@ public:
 
         Vector2 current = start;
 
+        RandomStream stream = RandomStream();
+        stream.GenerateNewSeed();
+
         int iterationCount = 0;
         while (true)
         {
-            foundAnyPoint = surface->SampleXZ(current, container) || foundAnyPoint;
+            bool found = surface->SampleXZ(current, container);
+            foundAnyPoint = found || foundAnyPoint;
+
+            if (found)
+            {
+                PLCTPoint* point = container->GetPoints()[container->GetPoints().Count() - 1];
+                point->GetProperties()->EnsureProperty(TEXT("Random"));
+                point->GetProperties()->SetPropertyValue(TEXT("Random"), Variant(stream.GetFraction()));
+            }
+
             current += left * _settings.Spacing;
             if (!Check(volume, current))
             {
