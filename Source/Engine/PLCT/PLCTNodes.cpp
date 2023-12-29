@@ -96,7 +96,7 @@ bool PLCTDebugDrawPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
 
     for (int i = 0; i < points->GetPoints().Count(); i++)
     {
-#ifdef USE_EDITOR
+#if USE_EDITOR
         DebugDraw::DrawSphere(BoundingSphere(points->GetPoints()[i]->GetTransform().Translation, 2), PointColor, 20.0f);
 #endif
     }
