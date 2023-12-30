@@ -104,7 +104,7 @@ public:
 
         if (!foundPoint)
         {
-            container->DeleteObjectNow();
+            SAFE_DELETE(container);
             return nullptr;
         }
 

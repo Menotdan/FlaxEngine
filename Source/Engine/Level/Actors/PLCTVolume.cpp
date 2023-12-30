@@ -69,7 +69,7 @@ bool PLCTVolume::Generate()
 
     if (RuntimeCache)
     {
-        RuntimeCache->DeleteObjectNow();
+        SAFE_DELETE(RuntimeCache);
     }
     RuntimeCache = New<PLCTPropertyStorage>();
     CHECK_RETURN(RuntimeCache, false);
@@ -89,9 +89,8 @@ bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)
 PLCTSurfaceList* PLCTVolume::FindAllSurfaces(PLCTSurface* baseInstance)
 {
     bool foundAnySurface = false;
-    PLCTSurfaceList* surfaces = New<PLCTSurfaceList>();
-
     CHECK_RETURN(baseInstance, nullptr);
+    PLCTSurfaceList* surfaces = New<PLCTSurfaceList>();    
 
     int index = 0;
     while (true)
@@ -99,7 +98,7 @@ PLCTSurfaceList* PLCTVolume::FindAllSurfaces(PLCTSurface* baseInstance)
         PLCTSurface* surface = (PLCTSurface*) ScriptingObject::NewObject(baseInstance->GetTypeHandle());
         if (!FindSurfaceAtIndex(surface, index++))
         {
-            Delete(surface);
+            SAFE_DELETE(surface);
             surface = nullptr;
             break;
         }
@@ -108,5 +107,11 @@ PLCTSurfaceList* PLCTVolume::FindAllSurfaces(PLCTSurface* baseInstance)
         surfaces->GetSurfaces().Add(surface);
     }
 
-    return foundAnySurface ? surfaces : nullptr;
+    if (!foundAnySurface)
+    {
+        SAFE_DELETE(surfaces);
+        return nullptr;
+    }
+
+    return surfaces;
 }

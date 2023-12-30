@@ -40,6 +40,7 @@ bool PLCTSampleSurface::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, in
 
     PLCTPointsContainer* points = sampler->SampleXZ();
     Delete(sampler);
+    sampler = nullptr;
 
     Arch2RuntimeCache* cache = New<Arch2RuntimeCache>();
     cache->Points = points;
@@ -65,19 +66,19 @@ bool PLCTGetBoxColliderSurfaces::GetOutputBox(PLCTGraphNode& node, PLCTVolume* v
     PLCTSurfaceList* surfaces = volume->FindAllSurfaces(baseInstance);
     if (surfaces == nullptr)
     {
-        Delete(baseInstance);
+        SAFE_DELETE(baseInstance);
         output = Variant(nullptr);
         return false;
     }
 
     if (surfaces->GetSurfaces().Count() == 0)
     {
-        Delete(surfaces);
-        Delete(baseInstance);
+        SAFE_DELETE(surfaces);
+        SAFE_DELETE(baseInstance);
         output = Variant(nullptr);
         return false;
     }
-    Delete(baseInstance);
+    SAFE_DELETE(baseInstance);
 
     Arch0RuntimeCache* cache = New<Arch0RuntimeCache>();
     cache->SurfaceList = surfaces;
@@ -100,7 +101,7 @@ bool PLCTGetTerrainSurfaces::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volum
     TerrainSurface* baseInstance = New<TerrainSurface>();
     PLCTSurfaceList* surfaces = volume->FindAllSurfaces(baseInstance);
     CHECK_RETURN(surfaces, false);
-    Delete(baseInstance);
+    SAFE_DELETE(baseInstance);
 
     Arch0RuntimeCache* cache = New<Arch0RuntimeCache>();
     cache->SurfaceList = surfaces;

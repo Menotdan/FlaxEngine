@@ -12,6 +12,8 @@ API_CLASS(Abstract) class FLAXENGINE_API PointFilter : public ScriptingObject
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PointFilter, ScriptingObject);
 
 public:
+    ~PointFilter() = default;
+
     API_FUNCTION() virtual bool FilterPoints(PLCTPointsContainer* points)
     {
         return false;

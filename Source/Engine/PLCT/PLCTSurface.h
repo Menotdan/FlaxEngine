@@ -3,6 +3,7 @@
 #include "PLCTProperties.h"
 #include "PLCTPoint.h"
 #include "Engine/Core/Config.h"
+#include "Engine/Core/Collections/Array.h"
 #include "Engine/Core/Delegate.h"
 #include "Engine/Level/Actor.h"
 #include "Engine/Scripting/ScriptingObject.h"
@@ -83,12 +84,12 @@ API_CLASS() class FLAXENGINE_API PLCTSurfaceList : public ScriptingObject
 {
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTSurfaceList, ScriptingObject);
 
+public:
     ~PLCTSurfaceList()
     {
         _surfaces.ClearDelete();
     }
 
-public:
     /// <summary>
     /// Get this array of surfaces.
     /// </summary>
