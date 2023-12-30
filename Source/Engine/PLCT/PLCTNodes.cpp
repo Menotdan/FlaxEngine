@@ -1,6 +1,9 @@
 #include "PLCTNodes.h"
 #include "Engine/Debug/DebugDraw.h"
 #include "Engine/Core/RandomStream.h"
+#include "Engine/Core/Delegate.h"
+#include "Engine/Threading/JobSystem.h"
+#include "Engine/Platform/Types.h"
 #include "Engine/Level/Actors/PLCTVolume.h"
 #include "Engine/Level/Prefabs/PrefabManager.h"
 #include "Engine/Level/Prefabs/Prefab.h"
@@ -149,6 +152,75 @@ bool PLCTDebugDrawPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
     return true;
 }
 
+#define PREFAB_SPAWN_JOBS 16
+struct PrefabToSpawn
+{
+    Transform transform;
+    Prefab* prefab;
+};
+
+class SpawnPrefabJob
+{
+public:
+    CriticalSection* Lock;
+    RandomStream* stream;
+    PLCTPointsContainer* points;
+    PLCTVolume* volume;
+    Array<PrefabSpawnEntry>* Prefabs;
+    Array<PrefabToSpawn> Spawn;
+
+    ~SpawnPrefabJob()
+    {
+        Spawn.Clear();
+    }
+
+public:
+    void SpawnPrefabThread(int32 id)
+    {
+        Lock->Lock();
+        int32 pointCount = points->GetPoints().Count();
+        int32 prefabCount = Prefabs->Count();
+        Lock->Unlock();
+
+        for (int pointIdx = id; pointIdx < pointCount; pointIdx += PREFAB_SPAWN_JOBS)
+        {
+            Lock->Lock();
+            float pickedPrefabNum = stream->GetFraction();
+            Lock->Unlock();
+
+            float totalRead = 0;
+            PrefabSpawnEntry* entry = nullptr;
+
+            for (int entryIdx = 0; entryIdx < prefabCount; entryIdx++)
+            {
+                totalRead += (*Prefabs)[entryIdx].Weight;
+                if (totalRead >= pickedPrefabNum)
+                {
+                    entry = &((*Prefabs)[entryIdx]);
+                    break;
+                }
+            }
+            
+
+            if (entry == nullptr)
+            {
+                continue;
+            }
+
+            if (!entry->Prefab || entry->Prefab->WaitForLoaded())
+            {
+                continue;
+            }
+
+            Lock->Lock();
+            Prefab* prefabPicked = entry->Prefab.Get();
+            Transform prefabTransform = points->GetPoints()[pointIdx]->GetTransform();
+            Spawn.Add(PrefabToSpawn{ prefabTransform, prefabPicked });
+            Lock->Unlock();
+        }
+    }
+};
+
 bool PLCTSpawnPrefabAtPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
 {
     LOG(Warning, "spawn prefabs");
@@ -161,34 +233,27 @@ bool PLCTSpawnPrefabAtPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
     RandomStream stream = RandomStream();
     stream.GenerateNewSeed();
 
-    int count = 0;
     CHECK_RETURN(points, false);
-    for (int pointIdx = 0; pointIdx < points->GetPoints().Count(); pointIdx++)
+
+    CriticalSection prefabSpawnLock;
+    prefabSpawnLock.Unlock();
+    SpawnPrefabJob* job = new SpawnPrefabJob();
+    job->Lock = &prefabSpawnLock;
+    job->points = points;
+    job->Prefabs = &Prefabs;
+    job->stream = &stream;
+    job->volume = volume;
+
+    Function<void(int32)> action;
+    action.Bind<SpawnPrefabJob, &SpawnPrefabJob::SpawnPrefabThread>(job);
+    JobSystem::Wait(JobSystem::Dispatch(action, PREFAB_SPAWN_JOBS));
+    for (int i = 0; i < job->Spawn.Count(); i++)
     {
-        float pickedPrefabNum = stream.GetFraction();
-        float totalRead = 0;
-        PrefabSpawnEntry* entry = nullptr;
-
-        for (int entryIdx = 0; entryIdx < Prefabs.Count(); entryIdx++)
-        {
-            totalRead += Prefabs[entryIdx].Weight;
-            if (totalRead >= pickedPrefabNum)
-            {
-                entry = &Prefabs[entryIdx];
-                break;
-            }
-        }
-
-        if (entry == nullptr)
-            continue;
-        if (!entry->Prefab || entry->Prefab->WaitForLoaded())
-            continue;
-
-        count++;
-        PrefabManager::SpawnPrefab(entry->Prefab.Get(), (Actor*) volume->GenerationContainer.Get(), points->GetPoints()[pointIdx]->GetTransform());
+        PrefabManager::SpawnPrefab(job->Spawn[i].prefab, (Actor*)volume->GenerationContainer.Get(), job->Spawn[i].transform);
     }
 
-    LOG(Warning, "Spawned {0} total actors.", count);
+    delete job;
+
     return true;
 }
 
