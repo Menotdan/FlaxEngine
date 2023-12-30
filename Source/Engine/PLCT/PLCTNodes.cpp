@@ -249,7 +249,8 @@ bool PLCTSpawnPrefabAtPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
     JobSystem::Wait(JobSystem::Dispatch(action, PREFAB_SPAWN_JOBS));
     for (int i = 0; i < job->Spawn.Count(); i++)
     {
-        PrefabManager::SpawnPrefab(job->Spawn[i].prefab, (Actor*)volume->GenerationContainer.Get(), job->Spawn[i].transform);
+        Actor* actor = PrefabManager::SpawnPrefab(job->Spawn[i].prefab, (Actor*)volume->GenerationContainer.Get(), job->Spawn[i].transform);
+        actor->BreakPrefabLink();
     }
 
     delete job;
