@@ -38,6 +38,11 @@ public:
     API_FUNCTION() bool Generate();
 
     /// <summary>
+    /// Clean up this volume.
+    /// </summary>
+    API_FUNCTION() void Cleanup();
+
+    /// <summary>
     /// Finds the first surface of the surface instance type, and then reads that data into the given surface object.
     /// </summary>
     /// <param name="surface">The target surface object.</param>
@@ -63,4 +68,8 @@ public:
 
 private:
     void GenerateThread(int32 id);
+    void CleanupThread(int32 id);
+
+    int64 _generateThreadID = -1;
+    int64 _cleanupThreadID = -1;
 };

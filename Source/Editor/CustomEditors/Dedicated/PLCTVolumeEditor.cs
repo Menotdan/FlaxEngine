@@ -36,7 +36,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             {
                 if (value is PLCTVolume volume)
                 {
-                    volume.GenerationContainer.DestroyChildren();
+                    volume.Cleanup();
                 }
             }
         }

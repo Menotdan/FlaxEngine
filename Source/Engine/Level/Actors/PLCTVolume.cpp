@@ -3,6 +3,7 @@
 #include "Engine/Threading/JobSystem.h"
 #include "Engine/Level/Scene/Scene.h"
 #include "Engine/Level/Actor.h"
+#include "Engine/Level/Actors/EmptyActor.h"
 #include "Engine/Level/Level.h"
 #include "Engine/PLCT/PLCTSurface.h"
 #include "Engine/PLCT/PLCTGraph.h"
@@ -53,10 +54,25 @@ bool PLCTVolume::FindSurfaceAtIndex(PLCTSurface* surface, int index)
 
 void PLCTVolume::GenerateThread(int32 id)
 {
+    LOG(Warning, "Started Generation Thread..");
     PLCTGraph* graph = Graph.Get();
 
-    CHECK(graph);
+    if (!graph)
+    {
+        Platform::AtomicStore(&_generateThreadID, -1);
+        return;
+    }
+
     graph->RunGeneration(this);
+
+    Platform::AtomicStore(&_generateThreadID, -1);
+    return;
+}
+
+void PLCTVolume::CleanupThread(int32 id)
+{
+    this->GenerationContainer.Get()->DestroyChildren();
+    Platform::AtomicStore(&_cleanupThreadID, -1);
 }
 
 bool PLCTVolume::Generate()
@@ -74,11 +90,21 @@ bool PLCTVolume::Generate()
     RuntimeCache = New<PLCTPropertyStorage>();
     CHECK_RETURN(RuntimeCache, false);
 
-    GenerateThread(0);
-    /*Function<void (int32)> action(GenerateThread);
-    int64 waitID = JobSystem::Dispatch(action);*/
+    if (Platform::AtomicRead(&_generateThreadID) != -1)
+    {
+        return false;
+    }
+
+    Function<void (int32)> action;
+    action.Bind<PLCTVolume, &PLCTVolume::GenerateThread>(this);
+    Platform::AtomicStore(&_generateThreadID, JobSystem::Dispatch(action));
 
     return true;
+}
+
+void PLCTVolume::Cleanup()
+{
+    CleanupThread(0);
 }
 
 bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)
