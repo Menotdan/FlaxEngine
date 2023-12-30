@@ -59,7 +59,7 @@ public:
     /// <returns>True if found matching surface, otherwise false.</returns>
     API_FUNCTION() bool FindSurfaceAtIndex(PLCTSurface* surface, int index);
 
-    PLCTPropertyStorage* RuntimeCache;
+    PLCTPropertyStorage* RuntimeCache = nullptr;
 
 private:
     void PLCTVolume::GenerateThread(int32 id);
