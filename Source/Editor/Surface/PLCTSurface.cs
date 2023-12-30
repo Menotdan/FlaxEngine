@@ -84,7 +84,7 @@ namespace FlaxEditor.Surface
             }
 
             PLCTNode nodeInstance = (PLCTNode) scriptType.CreateInstance();
-            int archetypeIndex = nodeInstance.NodeArchetypeIndex;
+            int archetypeIndex = nodeInstance.NodeArchetypeIndex();
 
             // Create node archetype
             var node = (NodeArchetype)Archetypes.PLCT.Nodes[archetypeIndex].Clone();

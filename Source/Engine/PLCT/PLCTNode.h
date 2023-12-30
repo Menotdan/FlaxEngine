@@ -25,7 +25,7 @@ public:
         return false;
     }
 
-    API_PROPERTY() FORCE_INLINE virtual int NodeArchetypeIndex() const
+    API_FUNCTION() FORCE_INLINE virtual int NodeArchetypeIndex() const
     {
         return 0;
     }

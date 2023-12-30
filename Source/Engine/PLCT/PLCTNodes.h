@@ -13,7 +13,7 @@ API_CLASS(Sealed) class FLAXENGINE_API PLCTGetBoxColliderSurfaces : public PLCTN
     API_AUTO_SERIALIZATION();
 
 public:
-    API_PROPERTY() FORCE_INLINE int NodeArchetypeIndex() const override
+    int NodeArchetypeIndex() const override
     {
         return 0;
     }
@@ -32,7 +32,7 @@ API_CLASS(Sealed) class FLAXENGINE_API PLCTGetTerrainSurfaces : public PLCTNode
     API_AUTO_SERIALIZATION();
 
 public:
-    API_PROPERTY() FORCE_INLINE int NodeArchetypeIndex() const override
+    int NodeArchetypeIndex() const override
     {
         return 0;
     }
@@ -54,7 +54,7 @@ public:
     API_FIELD(Attributes = "EditorOrder(10)")
     SurfaceSamplerSettings Settings;
 
-    API_PROPERTY() FORCE_INLINE int NodeArchetypeIndex() const override
+    int NodeArchetypeIndex() const override
     {
         return 2;
     }
@@ -73,7 +73,7 @@ API_CLASS(Sealed) class FLAXENGINE_API PLCTDebugDrawPoints : public PLCTNodeEnd
     API_AUTO_SERIALIZATION();
 
 public:
-    API_PROPERTY() FORCE_INLINE int NodeArchetypeIndex() const override
+    int NodeArchetypeIndex() const override
     {
         return 3;
     }
@@ -111,7 +111,7 @@ API_CLASS(Sealed) class FLAXENGINE_API PLCTSpawnPrefabAtPoints : public PLCTNode
     API_AUTO_SERIALIZATION();
 
 public:
-    API_PROPERTY() FORCE_INLINE int NodeArchetypeIndex() const override
+    int NodeArchetypeIndex() const override
     {
         return 3;
     }
@@ -125,7 +125,7 @@ public:
 };
 
 /// <summary>
-/// Samples a PLCT surface, generating points.
+/// Filters points by the random value assigned to them during creation.
 /// </summary>
 API_CLASS(Sealed) class FLAXENGINE_API PLCTFilterByRandom : public PLCTNode
 {
@@ -139,11 +139,105 @@ public:
     API_FIELD(Attributes = "EditorOrder(20)")
     float MaxValue;
 
-    API_PROPERTY() FORCE_INLINE int NodeArchetypeIndex() const override
+    int NodeArchetypeIndex() const override
     {
         return 4;
     }
 
+public:
+    // [PLCTNode]
+    bool GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output) override;
+};
+
+/// <summary>
+/// Set the transform of all the points.
+/// </summary>
+API_CLASS(Sealed) class FLAXENGINE_API PLCTSetPointsTransform : public PLCTNode
+{
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTSetPointsTransform, PLCTNode);
+    API_AUTO_SERIALIZATION();
+
+public:
+    API_FIELD(Attributes = "EditorOrder(10)")
+    bool SetPosition;
+
+    API_FIELD(Attributes = "EditorOrder(20)")
+    bool SetRotation;
+
+    API_FIELD(Attributes = "EditorOrder(30)")
+    bool SetScale;
+
+    API_FIELD(Attributes = "EditorOrder(40)")
+    Vector3 Position;
+
+    API_FIELD(Attributes = "EditorOrder(50)")
+    Quaternion Rotation;
+
+    API_FIELD(Attributes = "EditorOrder(60)")
+    Vector3 Scale;
+
+    int NodeArchetypeIndex() const override
+    {
+        return 4;
+    }
+
+    void TransformPoints(Transform& transform);
+public:
+    // [PLCTNode]
+    bool GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output) override;
+};
+
+/// <summary>
+/// Transform the points.
+/// </summary>
+API_CLASS(Sealed) class FLAXENGINE_API PLCTTransformPoints : public PLCTNode
+{
+    DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTTransformPoints, PLCTNode);
+    API_AUTO_SERIALIZATION();
+
+public:
+    API_FIELD(Attributes = "EditorOrder(10)")
+        bool RandomizePosition;
+
+    API_FIELD(Attributes = "EditorOrder(20)")
+        bool RandomizeRotation;
+
+    API_FIELD(Attributes = "EditorOrder(30)")
+        bool RandomizeScale;
+
+    API_FIELD(Attributes = "EditorOrder(40)")
+        Vector3 RandomPositionMinimum;
+
+    API_FIELD(Attributes = "EditorOrder(50)")
+        Quaternion RandomRotationMinimum;
+
+    API_FIELD(Attributes = "EditorOrder(60)")
+        Vector3 RandomScaleMinimum;
+
+    API_FIELD(Attributes = "EditorOrder(70)")
+        Vector3 RandomPositionMaximum;
+
+    API_FIELD(Attributes = "EditorOrder(80)")
+        Quaternion RandomRotationMaximum;
+
+    API_FIELD(Attributes = "EditorOrder(90)")
+        Vector3 RandomScaleMaximum;
+
+    API_FIELD(Attributes = "EditorOrder(100)")
+        Vector3 PositionOffset;
+
+    API_FIELD(Attributes = "EditorOrder(110)")
+        Quaternion RotationOffset;
+
+    API_FIELD(Attributes = "EditorOrder(120)")
+        Vector3 ScaleMultiplier;
+
+    int NodeArchetypeIndex() const override
+    {
+        return 4;
+    }
+
+    void TransformPoints(Transform& transform);
 public:
     // [PLCTNode]
     bool GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output) override;

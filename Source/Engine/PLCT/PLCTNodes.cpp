@@ -1,5 +1,6 @@
 #include "PLCTNodes.h"
 #include "Engine/Debug/DebugDraw.h"
+#include "Engine/Core/Random.h"
 #include "Engine/Core/RandomStream.h"
 #include "Engine/Core/Delegate.h"
 #include "Engine/Threading/JobSystem.h"
@@ -302,5 +303,134 @@ bool PLCTFilterByRandom::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, i
     volume->RuntimeCache->SetPropertyValue(GetID().ToString(), Variant(cache));
 
     output = Variant(filteredPoints);
+    return true;
+}
+
+void PLCTTransformPoints::TransformPoints(Transform& transform)
+{
+    transform.Translation += PositionOffset;
+    transform.Orientation += RotationOffset;
+    transform.Scale *= ScaleMultiplier;
+
+    if (RandomizePosition)
+    {
+        Vector3 positionOffset = Vector3::Lerp(RandomPositionMinimum, RandomPositionMaximum, Random::Rand());
+        transform.Translation += positionOffset;
+    }
+
+    if (RandomizeRotation)
+    {
+        Quaternion rotationOffset = Quaternion::Lerp(RandomRotationMinimum, RandomRotationMaximum, Random::Rand());
+        transform.Orientation += rotationOffset;
+    }
+
+    if (RandomizeScale)
+    {
+        Vector3 scaleMultiplier = Vector3::Lerp(RandomScaleMinimum, RandomScaleMaximum, Random::Rand());
+        transform.Scale *= scaleMultiplier;
+    }
+}
+
+bool PLCTTransformPoints::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output)
+{
+    LOG(Warning, "transform points");
+    Variant Cached = volume->RuntimeCache->GetPropertyValue(GetID().ToString());
+    if (!(Cached.Type == VariantType::Null))
+    {
+        Arch2RuntimeCache* cache = (Arch2RuntimeCache*)Cached.AsPointer;
+        output = Variant(cache->Points);
+        return true;
+    }
+
+    PLCTPointsContainer* points;
+
+    VisjectGraphBox box = node.Boxes[0];
+    if (!GetPoints(box, this, volume, points))
+        return false;
+
+    PLCTPointsContainer* transformedPoints = New<PLCTPointsContainer>();
+
+    CHECK_RETURN(points, false);
+    for (int pointIdx = 0; pointIdx < points->GetPoints().Count(); pointIdx++)
+    {
+        PLCTPoint* point = points->GetPoints()[pointIdx];
+        CHECK_RETURN(point, false);
+
+        PLCTPoint* transformedPoint = New<PLCTPoint>();
+        Memory::CopyItems<PLCTPoint>(transformedPoint, point, 1);
+
+        Transform transform = transformedPoint->GetTransform();
+        TransformPoints(transform);
+        transformedPoint->SetTransform(transform);
+
+        transformedPoints->GetPoints().Add(transformedPoint);
+    }
+
+    Arch2RuntimeCache* cache = New<Arch2RuntimeCache>();
+    cache->Points = transformedPoints;
+    volume->RuntimeCache->SetPropertyValue(GetID().ToString(), Variant(cache));
+
+    output = Variant(transformedPoints);
+    return true;
+}
+
+void PLCTSetPointsTransform::TransformPoints(Transform& transform)
+{
+    if (SetPosition)
+    {
+        transform.Translation = Position;
+    }
+
+    if (SetRotation)
+    {
+        transform.Orientation = Rotation;
+    }
+
+    if (SetScale)
+    {
+        transform.Scale = Scale;
+    }
+}
+
+bool PLCTSetPointsTransform::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output)
+{
+    LOG(Warning, "set points transform");
+    Variant Cached = volume->RuntimeCache->GetPropertyValue(GetID().ToString());
+    if (!(Cached.Type == VariantType::Null))
+    {
+        Arch2RuntimeCache* cache = (Arch2RuntimeCache*)Cached.AsPointer;
+        output = Variant(cache->Points);
+        return true;
+    }
+
+    PLCTPointsContainer* points;
+
+    VisjectGraphBox box = node.Boxes[0];
+    if (!GetPoints(box, this, volume, points))
+        return false;
+
+    PLCTPointsContainer* transformedPoints = New<PLCTPointsContainer>();
+
+    CHECK_RETURN(points, false);
+    for (int pointIdx = 0; pointIdx < points->GetPoints().Count(); pointIdx++)
+    {
+        PLCTPoint* point = points->GetPoints()[pointIdx];
+        CHECK_RETURN(point, false);
+
+        PLCTPoint* transformedPoint = New<PLCTPoint>();
+        Memory::CopyItems<PLCTPoint>(transformedPoint, point, 1);
+
+        Transform transform = transformedPoint->GetTransform();
+        TransformPoints(transform);
+        transformedPoint->SetTransform(transform);
+
+        transformedPoints->GetPoints().Add(transformedPoint);
+    }
+
+    Arch2RuntimeCache* cache = New<Arch2RuntimeCache>();
+    cache->Points = transformedPoints;
+    volume->RuntimeCache->SetPropertyValue(GetID().ToString(), Variant(cache));
+
+    output = Variant(transformedPoints);
     return true;
 }
