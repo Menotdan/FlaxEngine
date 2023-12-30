@@ -25,10 +25,16 @@ PLCTPoint* TerrainSurface::SampleXZ(Vector2 coordinates)
 
     Transform pointTransform = Transform::Identity;
     pointTransform.Translation = hit.Point;
-    pointTransform.Orientation = Quaternion::FromDirection(hit.Normal);
+
+    Vector3 normal = hit.Normal;
+
+    pointTransform.Orientation = Quaternion::FromDirection(normal);
+    Transform rotation = Transform::Identity;
+    rotation.Orientation = Quaternion::Euler(90, 0, 0);
+    Transform result = pointTransform.LocalToWorld(rotation);
 
     PLCTPoint* point = New<PLCTPoint>();
-    point->SetTransform(pointTransform);
+    point->SetTransform(result);
 
     return point;
 }
