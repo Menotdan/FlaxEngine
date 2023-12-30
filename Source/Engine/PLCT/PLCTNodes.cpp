@@ -161,6 +161,7 @@ bool PLCTSpawnPrefabAtPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
     RandomStream stream = RandomStream();
     stream.GenerateNewSeed();
 
+    int count = 0;
     CHECK_RETURN(points, false);
     for (int pointIdx = 0; pointIdx < points->GetPoints().Count(); pointIdx++)
     {
@@ -183,9 +184,11 @@ bool PLCTSpawnPrefabAtPoints::Execute(PLCTGraphNode& node, PLCTVolume* volume)
         if (!entry->Prefab || entry->Prefab->WaitForLoaded())
             continue;
 
+        count++;
         PrefabManager::SpawnPrefab(entry->Prefab.Get(), (Actor*) volume->GenerationContainer.Get(), points->GetPoints()[pointIdx]->GetTransform());
     }
 
+    LOG(Warning, "Spawned {0} total actors.", count);
     return true;
 }
 

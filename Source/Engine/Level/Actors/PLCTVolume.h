@@ -62,5 +62,5 @@ public:
     PLCTPropertyStorage* RuntimeCache = nullptr;
 
 private:
-    void PLCTVolume::GenerateThread(int32 id);
+    void GenerateThread(int32 id);
 };
