@@ -46,6 +46,7 @@ bool PLCTSampleSurface::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, in
     volume->RuntimeCache->SetPropertyValue(GetID().ToString(), Variant(cache));
 
     output = Variant(points);
+    LOG(Warning, "Sampled {0} points.", points->GetPoints().Count());
     return true;
 }
 

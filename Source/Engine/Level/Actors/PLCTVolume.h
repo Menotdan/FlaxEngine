@@ -60,4 +60,7 @@ public:
     API_FUNCTION() bool FindSurfaceAtIndex(PLCTSurface* surface, int index);
 
     PLCTPropertyStorage* RuntimeCache;
+
+private:
+    void PLCTVolume::GenerateThread(int32 id);
 };

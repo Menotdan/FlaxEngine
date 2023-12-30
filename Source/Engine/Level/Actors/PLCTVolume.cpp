@@ -1,5 +1,6 @@
 #include "PLCTVolume.h"
 #include "Engine/Core/Log.h"
+#include "Engine/Threading/JobSystem.h"
 #include "Engine/Level/Scene/Scene.h"
 #include "Engine/Level/Actor.h"
 #include "Engine/Level/Level.h"
@@ -50,6 +51,14 @@ bool PLCTVolume::FindSurfaceAtIndex(PLCTSurface* surface, int index)
     return false;
 }
 
+void PLCTVolume::GenerateThread(int32 id)
+{
+    PLCTGraph* graph = Graph.Get();
+
+    CHECK(graph);
+    graph->RunGeneration(this);
+}
+
 bool PLCTVolume::Generate()
 {
     if (!(Graph && !Graph->WaitForLoaded()))
@@ -58,15 +67,16 @@ bool PLCTVolume::Generate()
         return false;
     }
 
+    if (RuntimeCache)
+    {
+        RuntimeCache->DeleteObjectNow();
+    }
     RuntimeCache = New<PLCTPropertyStorage>();
-    PLCTGraph* graph = Graph.Get();
-
-    CHECK_RETURN(graph, false);
-    graph->RunGeneration(this);
-
     CHECK_RETURN(RuntimeCache, false);
-    RuntimeCache->DeleteObjectNow();
-    RuntimeCache = nullptr;
+
+    GenerateThread(0);
+    /*Function<void (int32)> action(GenerateThread);
+    int64 waitID = JobSystem::Dispatch(action);*/
 
     return true;
 }
@@ -79,7 +89,7 @@ bool PLCTVolume::FindFirstSurface(PLCTSurface* surface)
 PLCTSurfaceList* PLCTVolume::FindAllSurfaces(PLCTSurface* baseInstance)
 {
     bool foundAnySurface = false;
-    PLCTSurfaceList* surfaces = new PLCTSurfaceList();
+    PLCTSurfaceList* surfaces = New<PLCTSurfaceList>();
 
     CHECK_RETURN(baseInstance, nullptr);
 

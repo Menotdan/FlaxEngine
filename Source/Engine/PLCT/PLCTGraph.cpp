@@ -61,16 +61,22 @@ bool VisjectPLCTGraph::onNodeLoaded(Node* n)
     return VisjectGraph<PLCTGraphNode>::onNodeLoaded(n);
 }
 
-void PLCTGraph::RunGeneration(PLCTVolume* volume)
+bool PLCTGraph::RunGeneration(PLCTVolume* volume)
 {
+    bool good = true;
     for (int i = 0; i < Graph.Nodes.Count(); i++)
     {
         if (Graph.Nodes[i].Instance && Graph.Nodes[i].Instance->Is<PLCTNodeEnd>())
         {
             PLCTNodeEnd* graphEndNode = (PLCTNodeEnd*)Graph.Nodes[i].Instance;
-            graphEndNode->Execute(Graph.Nodes[i], volume);
+            if (!graphEndNode->Execute(Graph.Nodes[i], volume))
+            {
+                good = false;
+            }
         }
     }
+
+    return good;
 }
 
 BytesContainer PLCTGraph::LoadSurface()

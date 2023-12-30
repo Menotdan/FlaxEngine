@@ -43,7 +43,7 @@ public:
     /// <summary>
     /// Execute this graph.
     /// </summary>
-    API_FUNCTION() void RunGeneration(PLCTVolume* volume);
+    API_FUNCTION() bool RunGeneration(PLCTVolume* volume);
 
     /// <summary>
     /// Tries to load surface graph from the asset.

@@ -14,8 +14,24 @@ bool PointInsdeTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Vector2 p)
 PLCTPoint* TerrainSurface::SampleXZ(Vector2 coordinates)
 {
     CHECK_RETURN(_actor, nullptr);
+    float volumeY = GetVolume()->GetOrientedBox().Extents.Y + GetVolume()->GetOrientedBox().GetCenter().Y;
+    Vector3 topPosition = Vector3(coordinates.X, volumeY, coordinates.Y);
 
-    int32 patchesCount = _actor->GetPatchesCount();
+    RayCastHit hit;
+    if (!_actor->RayCast(topPosition, Vector3::Down, hit, GetVolume()->GetOrientedBox().Extents.Y * 2))
+    {
+        return nullptr;
+    }
+
+    Transform pointTransform = Transform::Identity;
+    pointTransform.Translation = hit.Point;
+
+    PLCTPoint* point = New<PLCTPoint>();
+    point->SetTransform(pointTransform);
+
+    return point;
+
+    /*int32 patchesCount = _actor->GetPatchesCount();
     TerrainPatch* patch = nullptr;
     for (int i = 0; i < patchesCount; i++)
     {
@@ -59,7 +75,7 @@ PLCTPoint* TerrainSurface::SampleXZ(Vector2 coordinates)
 
             return point;
         }
-    }
+    }*/
 
     return nullptr;
 }

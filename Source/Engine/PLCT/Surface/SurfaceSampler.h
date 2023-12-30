@@ -88,6 +88,7 @@ public:
             }
         }
 
+        //LOG(Warning, "Done sampling.");
         return foundAnyPoint;
     }
 
