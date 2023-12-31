@@ -180,7 +180,7 @@ public:
     /// The minimum normal vector. All components are checked individually.
     /// </summary>
     API_FIELD(Attributes = "EditorOrder(10)")
-    Vector3 MinValue = Vector3::Zero;
+    Vector3 MinValue = -Vector3::One;
 
     /// <summary>
     /// The maximum normal vector. All components are checked individually.
