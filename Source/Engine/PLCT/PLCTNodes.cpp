@@ -306,6 +306,55 @@ bool PLCTFilterByRandom::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, i
     return true;
 }
 
+bool PLCTFilterByNormal::GetOutputBox(PLCTGraphNode& node, PLCTVolume* volume, int id, Variant& output)
+{
+    LOG(Warning, "filter by normal");
+    Variant Cached = volume->RuntimeCache->GetPropertyValue(GetID().ToString());
+    if (!(Cached.Type == VariantType::Null))
+    {
+        Arch2RuntimeCache* cache = (Arch2RuntimeCache*)Cached.AsPointer;
+        output = Variant(cache->Points);
+        return true;
+    }
+
+    PLCTPointsContainer* points;
+
+    VisjectGraphBox box = node.Boxes[0];
+    if (!GetPoints(box, this, volume, points))
+        return false;
+
+    PLCTPointsContainer* filteredPoints = New<PLCTPointsContainer>();
+
+    CHECK_RETURN(points, false);
+    for (int pointIdx = 0; pointIdx < points->GetPoints().Count(); pointIdx++)
+    {
+        PLCTPoint* point = points->GetPoints()[pointIdx];
+        CHECK_RETURN(point, false);
+        Variant normalVector = point->GetProperties()->GetPropertyValue(TEXT("Normal"));
+        if (normalVector.Type == VariantType::Null)
+            continue;
+
+        Vector3 normal = normalVector.AsVector3();
+        if (normal.X > MaxValue.X || normal.X < MinValue.X
+            || normal.Y > MaxValue.Y || normal.Y < MinValue.Y
+            || normal.Z > MaxValue.Z || normal.Z < MinValue.Z)
+        {
+            continue;
+        }
+
+        PLCTPoint* filteredPoint = New<PLCTPoint>();
+        Memory::CopyItems<PLCTPoint>(filteredPoint, point, 1);
+        filteredPoints->GetPoints().Add(filteredPoint);
+    }
+
+    Arch2RuntimeCache* cache = New<Arch2RuntimeCache>();
+    cache->Points = filteredPoints;
+    volume->RuntimeCache->SetPropertyValue(GetID().ToString(), Variant(cache));
+
+    output = Variant(filteredPoints);
+    return true;
+}
+
 void PLCTTransformPoints::TransformPoints(Transform& transform)
 {
     transform.Translation += PositionOffset;

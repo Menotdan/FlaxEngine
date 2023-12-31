@@ -16,6 +16,9 @@ using System.Xml;
 
 namespace FlaxEditor.Windows.Assets
 {
+    /// <summary>
+    /// The editor window for PLCT graphs.
+    /// </summary>
     public sealed class PLCTGraphWindow : AssetEditorWindowBase<PLCTGraph>, IVisjectSurfaceWindow, IPresenterOwner
     {
         private readonly SplitPanel _split1;

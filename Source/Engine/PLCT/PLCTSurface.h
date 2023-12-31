@@ -62,11 +62,17 @@ public:
         return false;
     }
 
+    /// <summary>
+    /// Gets/Sets the volume associated with this surface.
+    /// </summary>
     API_PROPERTY() PLCTVolume* GetVolume()
     {
         return _volume;
     }
 
+    /// <summary>
+    /// Gets/Sets the volume associated with this surface.
+    /// </summary>
     API_PROPERTY() void SetVolume(PLCTVolume* volume)
     {
         _volume = volume;

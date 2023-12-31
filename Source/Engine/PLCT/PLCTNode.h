@@ -25,6 +25,10 @@ public:
         return false;
     }
 
+    /// <summary>
+    /// Gets the index of the node archetype this node uses. This is used to determine the inputs and outputs of the node.
+    /// </summary>
+    /// <returns>The index.</returns>
     API_FUNCTION() FORCE_INLINE virtual int NodeArchetypeIndex() const
     {
         return 0;
@@ -62,6 +66,9 @@ public:
     }
 };
 
+/// <summary>
+/// Base class for PLCT Graph nodes that have no output, this is used to evaluate the graph backwards properly.
+/// </summary>
 API_CLASS(Abstract) class FLAXENGINE_API PLCTNodeEnd : public PLCTNode
 {
     DECLARE_SCRIPTING_TYPE_WITH_CONSTRUCTOR_IMPL(PLCTNodeEnd, PLCTNode);

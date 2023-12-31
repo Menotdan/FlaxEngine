@@ -9,6 +9,9 @@
 #include "../PLCTSurface.h"
 #include "../PLCTPoint.h"
 
+/// <summary>
+/// The settings for the surface sampler.
+/// </summary>
 API_STRUCT() struct FLAXENGINE_API SurfaceSamplerSettings : ISerializable
 {
     API_AUTO_SERIALIZATION();
@@ -70,8 +73,9 @@ public:
                 PLCTPoint* point = container->GetPoints()[container->GetPoints().Count() - 1];
 
                 CHECK_RETURN(point, false);
-                point->GetProperties()->EnsureProperty(TEXT("Random"));
                 point->GetProperties()->SetPropertyValue(TEXT("Random"), Variant(stream.GetFraction()));
+                Transform pointTransform = point->GetTransform();
+                point->GetProperties()->SetPropertyValue(TEXT("Normal"), Variant(pointTransform.Orientation * Vector3::Up));
             }
 
             current += left * _settings.Spacing;
@@ -128,6 +132,10 @@ public:
         return foundAnyPoints ? container : nullptr;
     }
 
+    /// <summary>
+    /// Sets the settings for this surface sampler.
+    /// </summary>
+    /// <param name="settings">The new settings to use.</param>
     API_FUNCTION() void Configure(SurfaceSamplerSettings& settings)
     {
         _settings = settings;
