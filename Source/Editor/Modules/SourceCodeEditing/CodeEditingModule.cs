@@ -185,11 +185,6 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         /// </summary>
         public readonly CachedTypesCollection BehaviorTreeNodes = new CachedTypesCollection(64, new ScriptType(typeof(BehaviorTreeNode)), IsTypeValidScriptingType, HasAssemblyValidScriptingTypes);
 
-        /// <summary>
-        /// The PLCT Graph custom nodes collection.
-        /// </summary>
-        public readonly CachedTypesCollection PLCTGraphNodes = new CachedTypesCollection(64, new ScriptType(typeof(PLCTNode)), IsTypeValidScriptingType, HasAssemblyValidScriptingTypes);
-
         internal CodeEditingModule(Editor editor)
         : base(editor)
         {
