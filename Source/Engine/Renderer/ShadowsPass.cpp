@@ -143,11 +143,35 @@ bool ShadowsPass::setupResources()
     return false;
 }
 
+void EvaluateShadowMapQuality(int32& CSMRes, int32& CubeRes, Quality quality)
+{
+    switch (quality)
+    {
+    case Quality::Ultra:
+        CSMRes = 2048;
+        CubeRes = 1024;
+        break;
+    case Quality::High:
+        CSMRes = 1024;
+        CubeRes = 1024;
+        break;
+    case Quality::Medium:
+        CSMRes = 1024;
+        CubeRes = 512;
+        break;
+    case Quality::Low:
+        CSMRes = 512;
+        CubeRes = 256;
+        break;
+    }
+}
+
 void ShadowsPass::updateShadowMapSize()
 {
     // Temporary data
     int32 newSizeCSM = 0;
     int32 newSizeCube = 0;
+    EvaluateShadowMapQuality(newSizeCSM, newSizeCube, _currentShadowMapsQuality);
 
     // Select new size
     _currentShadowMapsQuality = Graphics::ShadowMapsQuality;
@@ -225,7 +249,23 @@ void ShadowsPass::SetupLight(RenderContext& renderContext, RenderContextBatch& r
     float shadowsDistance = Math::Min(view.Far, light.ShadowsDistance);
     int32 csmCount = Math::Clamp(light.CascadeCount, 0, MAX_CSM_CASCADES);
     bool blendCSM = Graphics::AllowCSMBlending;
-    const auto shadowMapsSizeCSM = (float)_shadowMapsSizeCSM;
+    auto shadowMapsSizeCSM = (float)_shadowMapsSizeCSM;
+    switch (light.ShadowOverrideMode)
+    {
+    case ShadowResolutionOverrideMode::Quality:
+        int32 newSizeCSM;
+        int32 newSizeCube;
+        EvaluateShadowMapQuality(newSizeCSM, newSizeCube, light.CustomQuality);
+
+        shadowMapsSizeCSM = (float)newSizeCSM;
+        break;
+    case ShadowResolutionOverrideMode::Custom:
+        shadowMapsSizeCSM = light.CustomResolution;
+        break;
+    default:
+        break;
+    }
+
 #if USE_EDITOR
     if (IsRunningRadiancePass)
         blendCSM = false;
@@ -458,7 +498,22 @@ void ShadowsPass::SetupLight(RenderContext& renderContext, RenderContextBatch& r
     renderContextBatch.Contexts.AddDefault(shadowData.ContextCount);
 
     const auto& view = renderContext.View;
-    const auto shadowMapsSizeCube = (float)_shadowMapsSizeCube;
+    auto shadowMapsSizeCube = (float)_shadowMapsSizeCube;
+    switch (light.ShadowOverrideMode)
+    {
+    case ShadowResolutionOverrideMode::Quality:
+        int32 newSizeCSM;
+        int32 newSizeCube;
+        EvaluateShadowMapQuality(newSizeCSM, newSizeCube, light.CustomQuality);
+
+        shadowMapsSizeCube = (float)newSizeCube;
+        break;
+    case ShadowResolutionOverrideMode::Custom:
+        shadowMapsSizeCube = light.CustomResolution;
+        break;
+    default:
+        break;
+    }
 
     // Fade shadow on distance
     const float fadeDistance = Math::Max(light.ShadowsFadeDistance, 0.1f);
@@ -498,7 +553,22 @@ void ShadowsPass::SetupLight(RenderContext& renderContext, RenderContextBatch& r
     renderContextBatch.Contexts.AddDefault(shadowData.ContextCount);
 
     const auto& view = renderContext.View;
-    const auto shadowMapsSizeCube = (float)_shadowMapsSizeCube;
+    auto shadowMapsSizeCube = (float)_shadowMapsSizeCube;
+    switch (light.ShadowOverrideMode)
+    {
+    case ShadowResolutionOverrideMode::Quality:
+        int32 newSizeCSM;
+        int32 newSizeCube;
+        EvaluateShadowMapQuality(newSizeCSM, newSizeCube, light.CustomQuality);
+
+        shadowMapsSizeCube = (float)newSizeCube;
+        break;
+    case ShadowResolutionOverrideMode::Custom:
+        shadowMapsSizeCube = light.CustomResolution;
+        break;
+    default:
+        break;
+    }
 
     // Fade shadow on distance
     const float fadeDistance = Math::Max(light.ShadowsFadeDistance, 0.1f);

@@ -55,6 +55,10 @@ struct RendererDirectionalLightData
     float ContactShadowsLength;
     ShadowsCastingMode ShadowsMode;
 
+    ShadowResolutionOverrideMode ShadowOverrideMode;
+    int32 CustomResolution;
+    Quality CustomQuality;
+
     Guid ID;
 
     void SetupLightData(LightData* data, bool useShadow) const;
@@ -89,6 +93,10 @@ struct RendererSpotLightData
     float ContactShadowsLength;
     float IndirectLightingIntensity;
     ShadowsCastingMode ShadowsMode;
+
+    ShadowResolutionOverrideMode ShadowOverrideMode;
+    int CustomResolution;
+    Quality CustomQuality;
 
     StaticFlags StaticFlags;
     int16 ShadowDataIndex = -1;
@@ -127,6 +135,10 @@ struct RendererPointLightData
     float ContactShadowsLength;
     float IndirectLightingIntensity;
     ShadowsCastingMode ShadowsMode;
+    
+    ShadowResolutionOverrideMode ShadowOverrideMode;
+    int CustomResolution;
+    Quality CustomQuality;
 
     StaticFlags StaticFlags;
     int16 ShadowDataIndex = -1;

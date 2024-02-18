@@ -258,6 +258,27 @@ API_ENUM() enum class PartitionMode
 };
 
 /// <summary>
+/// The override mode for shadow resolution.
+/// </summary>
+API_ENUM() enum class ShadowResolutionOverrideMode
+{
+    /// <summary>
+    /// Don't override the shadow resolution.
+    /// </summary>
+    None = 0,
+
+    /// <summary>
+    /// Select a quality option to override the shadow resolution.
+    /// </summary>
+    Quality = 1,
+
+    /// <summary>
+    /// Select a custom resolution.
+    /// </summary>
+    Custom = 2,
+};
+
+/// <summary>
 /// Identifies expected GPU resource use during rendering. The usage directly reflects whether a resource is accessible by the CPU and/or the GPU.	
 /// </summary>
 API_ENUM() enum class GPUResourceUsage

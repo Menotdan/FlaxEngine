@@ -125,7 +125,7 @@ public:
     /// <summary>
     /// The length of the rays for contact shadows computed via the screen-space tracing. Set this to values higher than 0 to enable screen-space shadows rendering for this light. This improves the shadowing details. Actual ray distance is based on the pixel distance from the camera.
     /// </summary>
-    API_FIELD(Attributes="EditorOrder(99), EditorDisplay(\"Shadow\"), Limit(0.0f, 0.1f, 0.001f)")
+    API_FIELD(Attributes="EditorOrder(97), EditorDisplay(\"Shadow\"), Limit(0.0f, 0.1f, 0.001f)")
     float ContactShadowsLength = 0.0f;
 
     /// <summary>
@@ -134,8 +134,26 @@ public:
     API_FIELD(Attributes="EditorOrder(60), EditorDisplay(\"Shadow\", \"Mode\")")
     ShadowsCastingMode ShadowsMode = ShadowsCastingMode::All;
 
+    API_FIELD(Attributes="EditorOrder(98), EditorDisplay(\"Shadow\", \"Resolution Override\")")
+    ShadowResolutionOverrideMode ResolutionOverrideMode;
+
+    API_PROPERTY() bool GetOverrideModeIsResolution() const { return ResolutionOverrideMode == ShadowResolutionOverrideMode::Custom; }
+    API_PROPERTY() bool GetOverrideModeIsQuality() const { return ResolutionOverrideMode == ShadowResolutionOverrideMode::Quality; }
+
+    API_PROPERTY(Attributes = "EditorOrder(99), EditorDisplay(\"Shadow\", \"Custom Resolution\"), VisibleIf(nameof(OverrideModeIsResolution))")
+    int GetCustomResolution() const { return _customResolution; }
+
+    API_PROPERTY(Attributes = "EditorOrder(99), EditorDisplay(\"Shadow\", \"Custom Resolution\"), VisibleIf(nameof(OverrideModeIsResolution))")
+    void SetCustomResolution(int value) { _customResolution = Math::RoundUpToPowerOf2(value); }
+
+    API_FIELD(Attributes = "EditorOrder(99), EditorDisplay(\"Shadow\", \"Custom Quality\"), VisibleIf(nameof(OverrideModeIsQuality))")
+    Quality CustomQuality;
+
 public:
     // [Light]
     void Serialize(SerializeStream& stream, const void* otherObj) override;
     void Deserialize(DeserializeStream& stream, ISerializeModifier* modifier) override;
+
+private:
+    int _customResolution;
 };

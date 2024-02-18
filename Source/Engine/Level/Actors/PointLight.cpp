@@ -100,6 +100,11 @@ void PointLight::Draw(RenderContext& renderContext)
         data.ShadowsNormalOffsetScale = ShadowsNormalOffsetScale;
         data.ShadowsDepthBias = ShadowsDepthBias;
         data.ShadowsSharpness = ShadowsSharpness;
+
+        data.ShadowOverrideMode = ResolutionOverrideMode;
+        data.CustomQuality = CustomQuality;
+        data.CustomResolution = GetCustomResolution();
+
         data.VolumetricScatteringIntensity = VolumetricScatteringIntensity;
         data.CastVolumetricShadow = CastVolumetricShadow;
         data.RenderedVolumetricFog = 0;

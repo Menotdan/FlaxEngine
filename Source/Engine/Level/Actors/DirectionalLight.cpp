@@ -46,6 +46,10 @@ void DirectionalLight::Draw(RenderContext& renderContext)
         data.Cascade3Spacing = Cascade3Spacing;
         data.Cascade4Spacing = Cascade4Spacing;
 
+        data.ShadowOverrideMode = ResolutionOverrideMode;
+        data.CustomQuality = CustomQuality;
+        data.CustomResolution = GetCustomResolution();
+
         data.PartitionMode = PartitionMode;
         data.ContactShadowsLength = ContactShadowsLength;
         data.StaticFlags = GetStaticFlags();

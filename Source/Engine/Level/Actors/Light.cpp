@@ -100,6 +100,9 @@ void LightWithShadow::Serialize(SerializeStream& stream, const void* otherObj)
     SERIALIZE(ShadowsDepthBias);
     SERIALIZE(ShadowsNormalOffsetScale);
     SERIALIZE(ContactShadowsLength);
+    SERIALIZE(ResolutionOverrideMode);
+    SERIALIZE(_customResolution);
+    SERIALIZE(CustomQuality);
 }
 
 void LightWithShadow::Deserialize(DeserializeStream& stream, ISerializeModifier* modifier)
@@ -116,4 +119,7 @@ void LightWithShadow::Deserialize(DeserializeStream& stream, ISerializeModifier*
     DESERIALIZE(ShadowsDepthBias);
     DESERIALIZE(ShadowsNormalOffsetScale);
     DESERIALIZE(ContactShadowsLength);
+    DESERIALIZE(ResolutionOverrideMode);
+    DESERIALIZE(_customResolution);
+    DESERIALIZE(CustomQuality);
 }
